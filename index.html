@@ -25,23 +25,51 @@
   --green: #3B6D11; --green-bg: #EAF3DE; --green-text: #173404;
   --pink: #993556; --pink-bg: #FBEAF0; --pink-text: #4B1528;
   --rad: 10px; --rad-lg: 14px; --rad-xl: 18px;
+  --fs-base: 15px;
+  --fs-sm: 13px;
+  --fs-xs: 11px;
+  --fs-card-name: 14px;
+  --fs-card-short: 12px;
+}
+/* dark mode */
+[data-theme="dark"] {
+  --bg: #141414;
+  --surface: #1e1e1e;
+  --surface2: #252525;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #e8e8e4;
+  --text2: #a0a09c;
+  --text3: #606060;
+  --blue-bg: #0d2d4a;
+  --blue-text: #6db3f2;
+  --teal-bg: #0a2820; --teal-text: #5ccba4;
+  --amber-bg: #2a1e08; --amber-text: #f0b955;
+  --coral-bg: #2a1208; --coral-text: #f0845a;
+  --purple-bg: #1e1840; --purple-text: #a89af0;
+  --green-bg: #0e2210; --green-text: #7dcc7d;
+  --pink-bg: #2a0e1a; --pink-text: #f090b8;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:'Assistant',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+body{font-family:'Assistant',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs-base)}
 body.ltr{font-family:'Inter',Arial,sans-serif;direction:ltr}
 body.rtl{direction:rtl}
 
 /* ── TOPBAR ── */
-.topbar{background:var(--surface);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
-.topbar-left{display:flex;align-items:center;gap:14px}
+.topbar{background:var(--surface);border-bottom:0.5px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.topbar-left{display:flex;align-items:center;gap:12px;cursor:pointer}
+.topbar-left:hover .app-name{color:var(--blue)}
 .logo-mark{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;user-select:none}
 .logo-mark svg{width:18px;height:18px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.app-name{font-size:15px;font-weight:600;color:var(--text)}
+.app-name{font-size:15px;font-weight:600;color:var(--text);transition:color .15s}
 .app-name span{font-weight:300;color:var(--text2)}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.lang-btn{padding:5px 12px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;font-size:13px;cursor:pointer;color:var(--text2);font-family:inherit;transition:all .15s}
+.topbar-right{display:flex;align-items:center;gap:5px}
+.lang-btn{padding:5px 10px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;font-size:13px;cursor:pointer;color:var(--text2);font-family:inherit;transition:all .15s}
 .lang-btn.active{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue);font-weight:500}
+.ctrl-btn{width:32px;height:32px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .15s;font-family:inherit;flex-shrink:0}
+.ctrl-btn:hover{background:var(--surface2);color:var(--text)}
+.ctrl-sep{width:0.5px;height:20px;background:var(--border2);margin:0 2px}
 
 /* ── LAYOUT ── */
 .main{display:flex;flex:1}
@@ -54,7 +82,7 @@ body.rtl{direction:rtl}
 .nav-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--rad);cursor:pointer;transition:background .1s}
 .nav-item:hover{background:var(--surface2)}
 .nav-item.active{background:var(--blue-bg)}
-.nav-item-label{font-size:13px;color:var(--text)}
+.nav-item-label{font-size:var(--fs-sm);color:var(--text)}
 .nav-item.active .nav-item-label{color:var(--blue-text);font-weight:500}
 .nav-count{font-size:11px;color:var(--text3);background:var(--surface2);padding:1px 7px;border-radius:99px}
 .nav-item.active .nav-count{background:rgba(24,95,165,.12);color:var(--blue-text)}
@@ -65,10 +93,13 @@ body.rtl{direction:rtl}
 .search-input{flex:1;height:42px;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);padding:0 14px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
 .search-input:focus{border-color:var(--blue);background:white}
 .search-btn{height:42px;padding:0 20px;background:var(--blue);color:white;border:none;border-radius:var(--rad);font-size:14px;cursor:pointer;font-family:inherit;font-weight:500}
-.chips-row{display:flex;gap:6px;flex-wrap:wrap}
-.chip{padding:4px 12px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;font-family:inherit}
+.chips-row{display:flex;gap:6px;flex-wrap:wrap;overflow:hidden;max-height:36px;transition:max-height .3s ease}
+.chips-row.expanded{max-height:300px}
+.chip{padding:4px 12px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
 .chip.active{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue);font-weight:500}
-.chip:hover{background:white}
+.chip:hover{background:var(--surface);border-color:var(--border2)}
+.tags-expand-btn{padding:4px 10px;border-radius:99px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tags-expand-btn:hover{background:var(--surface2);color:var(--text2)}
 
 /* ── CARDS ── */
 .results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -80,8 +111,8 @@ body.rtl{direction:rtl}
 .card-top{display:flex;align-items:flex-start;gap:12px}
 .card-icon{width:40px;height:40px;border-radius:var(--rad);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
 .card-icon img{width:28px;height:28px;object-fit:contain}
-.card-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
-.card-short{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4}
+.card-name{font-size:var(--fs-card-name);font-weight:600;color:var(--text);line-height:1.3}
+.card-short{font-size:var(--fs-card-short);color:var(--text2);margin-top:2px;line-height:1.4}
 .card-tags{display:flex;gap:5px;flex-wrap:wrap}
 .tag{font-size:11px;padding:2px 9px;border-radius:99px;font-weight:500}
 .t-cat{background:var(--blue-bg);color:var(--blue-text)}
@@ -120,13 +151,13 @@ body.rtl{direction:rtl}
 .detail-icon{width:52px;height:52px;border-radius:var(--rad-lg);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:var(--surface2)}
 .detail-icon img{width:100%;height:100%;object-fit:contain;padding:6px}
 .detail-title{font-size:22px;font-weight:700;color:var(--text)}
-.detail-subtitle{font-size:14px;color:var(--text2);margin-top:4px}
+.detail-subtitle{font-size:var(--fs-sm);color:var(--text2);margin-top:4px}
 .detail-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 .btn-action{padding:8px 18px;border-radius:var(--rad);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;border:0.5px solid var(--border2);background:transparent;color:var(--text);transition:all .15s}
 .btn-action.primary{background:var(--blue);color:white;border-color:var(--blue)}
 .btn-action.primary:hover{background:var(--blue-text)}
 .btn-action:hover{background:var(--surface2)}
-.detail-desc{font-size:14px;color:var(--text);line-height:1.8;margin-bottom:20px}
+.detail-desc{font-size:var(--fs-sm);color:var(--text);line-height:1.8;margin-bottom:20px}
 .detail-sec-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
 .tech-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
 .tech-pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:4px 10px;border-radius:99px;background:var(--surface2);border:0.5px solid var(--border)}
@@ -135,11 +166,11 @@ body.rtl{direction:rtl}
 .edu-box{background:var(--blue-bg);border-radius:var(--rad-lg);padding:14px 16px;margin-bottom:10px}
 .edu-box-header{display:flex;align-items:center;gap:7px;margin-bottom:6px}
 .edu-box-title{font-size:13px;font-weight:600;color:var(--blue-text)}
-.edu-box-text{font-size:13px;color:var(--blue-text);line-height:1.65;opacity:.9}
+.edu-box-text{font-size:var(--fs-sm);color:var(--blue-text);line-height:1.65;opacity:.9}
 .tip-box{background:var(--teal-bg);border-radius:var(--rad);padding:11px 14px;margin-bottom:20px;border-inline-start:3px solid var(--teal)}
 body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--teal)}
 .tip-label{font-size:11px;font-weight:600;color:var(--teal);margin-bottom:3px}
-.tip-text{font-size:13px;color:var(--teal-text);line-height:1.6}
+.tip-text{font-size:var(--fs-sm);color:var(--teal-text);line-height:1.6}
 .tags-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
 .related-section{background:var(--surface);border-radius:var(--rad-xl);border:0.5px solid var(--border);padding:20px}
 .related-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:14px}
@@ -148,7 +179,7 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 .related-card:hover{border-color:var(--blue)}
 .related-favicon{width:26px;height:26px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;font-size:14px}
 .related-favicon img{width:100%;height:100%;object-fit:contain;padding:3px}
-.related-name{font-size:12px;font-weight:600;color:var(--text)}
+.related-name{font-size:var(--fs-card-short);font-weight:600;color:var(--text)}
 .related-cat{font-size:11px;color:var(--text3);margin-top:1px}
 
 /* ── ADMIN PANEL ── */
@@ -295,16 +326,21 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="topbar-left">
-    <div class="logo-mark" id="logo-secret" onclick="logoClick()">
+  <div class="topbar-left" onclick="goHome()">
+    <div class="logo-mark" id="logo-secret" onclick="event.stopPropagation();logoClick()">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
     </div>
     <div class="app-name" id="app-name">מאגר כלי AI לחינוך <span>/ AI Tools for Education</span></div>
   </div>
   <div class="topbar-right">
-    <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עברית</button>
-    <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
-    <button id="menu-btn" style="display:none;width:36px;height:36px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:18px;align-items:center;justify-content:center" onclick="toggleMobileMenu()">☰</button>
+    <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עב</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    <div class="ctrl-sep"></div>
+    <button class="ctrl-btn" id="font-down-btn" onclick="changeFontSize(-1)" title="הקטן טקסט">A−</button>
+    <button class="ctrl-btn" id="font-up-btn" onclick="changeFontSize(1)" title="הגדל טקסט">A+</button>
+    <div class="ctrl-sep"></div>
+    <button class="ctrl-btn" id="theme-btn" onclick="cycleTheme()" title="שנה מצב תצוגה">☀️</button>
+    <button id="menu-btn" style="display:none;width:36px;height:36px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:18px;align-items:center;justify-content:center;color:var(--text2)" onclick="toggleMobileMenu()">☰</button>
   </div>
 </div>
 
@@ -802,11 +838,16 @@ function renderList(){
   const allTags = getAllTags();
   const catLabel = state.activeCat>=0 ? t('cats')[state.activeCat] : t('allTools');
 
-  // תגיות שימוש — שורה לחיצה
+  // תגיות שימוש — מכווץ עם כפתור הרחבה
+  const expandLabel = LANG==='he' ? 'כל התגיות ▾' : 'All tags ▾';
+  const collapseLabel = LANG==='he' ? 'סגור ▴' : 'Close ▴';
   const tagsRow = `
-    <div class="chips-row">
-      <button class="chip${!state.activeTag?' active':''}" onclick="setTag('')">${LANG==='he'?'הכל':'All'}</button>
-      ${allTags.map(({tag,count})=>`<button class="chip${state.activeTag===tag?' active':''}" onclick="setTag('${tag.replace(/'/g,"\\'")}')"><span>${tag}</span><span style="opacity:.5;font-size:10px;margin-inline-start:4px">${count}</span></button>`).join('')}
+    <div style="display:flex;align-items:flex-start;gap:8px">
+      <div class="chips-row" id="tags-chips-row" style="flex:1">
+        <button class="chip${!state.activeTag?' active':''}" onclick="setTag('')">${LANG==='he'?'הכל':'All'}</button>
+        ${allTags.map(({tag,count})=>`<button class="chip${state.activeTag===tag?' active':''}" onclick="setTag('${tag.replace(/'/g,"\\'")}')"><span>${tag}</span><span style="opacity:.5;font-size:10px;margin-inline-start:4px">${count}</span></button>`).join('')}
+      </div>
+      <button id="tags-toggle-btn" onclick="toggleTagsExpand()" style="flex-shrink:0;padding:4px 10px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap;margin-top:2px">${expandLabel}</button>
     </div>`;
 
   let cards = '';
@@ -991,8 +1032,71 @@ function checkMobile(){
   if(menuBtn) menuBtn.style.display = isMobile ? 'flex' : 'none';
 }
 
+// ─── NAVIGATION ───────────────────────────────────────────────
+function goHome(){
+  state.page='list'; state.searchQ=''; state.activeCat=-1;
+  state.activeSubj=-1; state.activePricing='all'; state.activeTag='';
+  renderAll(); window.scrollTo(0,0);
+}
+
+// ─── FONT SIZE ─────────────────────────────────────────────────
+const LS_FONT = 'aitools_fontlevel';
+let fontLevel = parseInt(localStorage.getItem(LS_FONT)||'0');
+const FONT_SIZES = [13,14,15,16,17,18];
+function applyFontSize(){
+  const idx = Math.max(0,Math.min(FONT_SIZES.length-1, 2+fontLevel));
+  document.documentElement.style.setProperty('--fs-base', FONT_SIZES[idx]+'px');
+  document.documentElement.style.setProperty('--fs-sm', (FONT_SIZES[idx]-2)+'px');
+  document.documentElement.style.setProperty('--fs-xs', (FONT_SIZES[idx]-4)+'px');
+  document.documentElement.style.setProperty('--fs-card-name', (FONT_SIZES[idx]-1)+'px');
+  document.documentElement.style.setProperty('--fs-card-short', (FONT_SIZES[idx]-3)+'px');
+  const up = document.getElementById('font-up-btn');
+  const dn = document.getElementById('font-down-btn');
+  if(up) up.style.opacity = idx >= FONT_SIZES.length-1 ? '0.3' : '1';
+  if(dn) dn.style.opacity = idx <= 0 ? '0.3' : '1';
+}
+function changeFontSize(dir){
+  fontLevel = Math.max(-2, Math.min(3, fontLevel+dir));
+  localStorage.setItem(LS_FONT, fontLevel);
+  applyFontSize();
+}
+
+// ─── THEME ─────────────────────────────────────────────────────
+const LS_THEME = 'aitools_theme';
+const THEMES = ['auto','light','dark'];
+const THEME_ICONS = {auto:'🌗', light:'☀️', dark:'🌙'};
+let themeMode = localStorage.getItem(LS_THEME) || 'auto';
+function applyTheme(){
+  const btn = document.getElementById('theme-btn');
+  let resolved = themeMode;
+  if(themeMode === 'auto') resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', resolved);
+  if(btn) btn.textContent = THEME_ICONS[themeMode];
+}
+function cycleTheme(){
+  const idx = THEMES.indexOf(themeMode);
+  themeMode = THEMES[(idx+1)%THEMES.length];
+  localStorage.setItem(LS_THEME, themeMode);
+  applyTheme();
+}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ if(themeMode==='auto') applyTheme(); });
+
+// ─── TAGS EXPAND ───────────────────────────────────────────────
+let tagsExpanded = false;
+function toggleTagsExpand(){
+  tagsExpanded = !tagsExpanded;
+  const row = document.getElementById('tags-chips-row');
+  const btn = document.getElementById('tags-toggle-btn');
+  if(row) row.classList.toggle('expanded', tagsExpanded);
+  if(btn) btn.textContent = tagsExpanded
+    ? (LANG==='he'?'סגור ▴':'Close ▴')
+    : (LANG==='he'?'כל התגיות ▾':'All tags ▾');
+}
+
 // ─── INIT ─────────────────────────────────────────────────────
 renderAll();
+applyFontSize();
+applyTheme();
 checkMobile();
 window.addEventListener('resize', checkMobile);
 </script>
