@@ -90,6 +90,7 @@ body.rtl{direction:rtl}
 .t-partial{background:var(--amber-bg);color:var(--amber-text)}
 .t-paid{background:var(--coral-bg);color:var(--coral-text)}
 .t-he{background:var(--purple-bg);color:var(--purple-text)}
+.t-use{background:var(--surface2);color:var(--text2);border:0.5px solid var(--border2)}
 .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:0.5px solid var(--border);margin-top:auto}
 .meta-badge{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
 .video-dot{width:8px;height:8px;background:var(--pink);border-radius:99px;display:inline-block}
@@ -216,8 +217,70 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 .pw-err{font-size:12px;color:var(--coral);margin-top:6px}
 .pw-cancel{font-size:12px;color:var(--text3);cursor:pointer;margin-top:8px;display:block}
 
+/* ── FOOTER ── */
+.footer{background:var(--surface);border-top:0.5px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:auto}
+.footer-credit{font-size:12px;color:var(--text3)}
+.footer-credit strong{color:var(--text2);font-weight:500}
+.footer-copy{font-size:11px;color:var(--text3)}
+
+/* ── RESPONSIVE — MOBILE ── */
+@media (max-width: 768px) {
+  .sidebar{display:none}
+  .content{padding:14px}
+  .topbar{padding:0 14px;height:52px}
+  .app-name span{display:none}
+  .app-name{font-size:14px}
+  .lang-btn{padding:4px 9px;font-size:12px}
+
+  .search-wrap{padding:12px 14px;border-radius:var(--rad)}
+  .search-row{gap:6px}
+  .search-input{height:38px;font-size:13px}
+  .search-btn{height:38px;padding:0 14px;font-size:13px}
+  .chips-row{gap:5px}
+  .chip{font-size:11px;padding:3px 10px}
+
+  .cards-grid{grid-template-columns:1fr;gap:10px}
+  .card{padding:13px}
+  .card-icon{width:36px;height:36px;font-size:18px}
+  .card-icon img{width:24px;height:24px}
+  .card-name{font-size:13px}
+  .card-short{font-size:11px}
+  .tag{font-size:10px;padding:2px 7px}
+  .btn-xs{font-size:11px;padding:4px 9px}
+
+  .detail-page{max-width:100%}
+  .detail-card{padding:18px}
+  .detail-header{gap:12px}
+  .detail-icon{width:44px;height:44px;font-size:22px}
+  .detail-title{font-size:18px}
+  .detail-subtitle{font-size:13px}
+  .btn-action{padding:7px 14px;font-size:12px}
+  .detail-grid{grid-template-columns:1fr 1fr}
+  .tech-bar{gap:5px}
+  .tech-pill{font-size:11px;padding:3px 8px}
+  .edu-box{padding:12px 14px}
+  .tip-box{padding:10px 12px}
+  .related-grid{grid-template-columns:1fr 1fr}
+
+  .admin-modal{width:100vw;max-height:100vh;border-radius:var(--rad-lg) var(--rad-lg) 0 0;position:fixed;bottom:0;left:0;right:0}
+  .form-2col,.form-3col{grid-template-columns:1fr}
+
+  .footer{padding:12px 14px}
+  .footer-copy{display:none}
+}
+
 /* empty */
 .empty-state{text-align:center;padding:48px 24px;color:var(--text2)}
+.empty-title{font-size:16px;font-weight:500;margin-bottom:4px}
+.empty-sub{font-size:13px}
+
+@media (max-width: 420px) {
+  .cards-grid{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:1fr}
+  .related-grid{grid-template-columns:1fr}
+  .detail-actions{flex-direction:column}
+  .btn-action{width:100%;text-align:center}
+}
 .empty-title{font-size:16px;font-weight:500;margin-bottom:4px}
 .empty-sub{font-size:13px}
 
@@ -233,7 +296,6 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-left">
-    <!-- לחיצה 5 פעמים על הלוגו פותחת אדמין -->
     <div class="logo-mark" id="logo-secret" onclick="logoClick()">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
     </div>
@@ -242,12 +304,26 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
   <div class="topbar-right">
     <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עברית</button>
     <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+    <button id="menu-btn" style="display:none;width:36px;height:36px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:18px;align-items:center;justify-content:center" onclick="toggleMobileMenu()">☰</button>
   </div>
 </div>
 
 <div class="main">
   <div class="sidebar" id="sidebar"></div>
   <div class="content" id="content"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-credit">נבנה על ידי <strong>אייל עזרא / Eyal Ezra</strong></div>
+  <div class="footer-copy">© 2025 מאגר כלי AI לחינוך · כל הזכויות שמורות</div>
+</footer>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div id="mobile-sidebar-overlay" style="display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.4)" onclick="closeMobileMenu()">
+  <div id="mobile-sidebar-panel" style="width:280px;max-width:85vw;height:100%;background:var(--surface);overflow-y:auto;padding:20px 12px;box-shadow:4px 0 20px rgba(0,0,0,.15)" onclick="event.stopPropagation()">
+    <div id="mobile-sidebar-content"></div>
+  </div>
 </div>
 
 </div>
@@ -293,6 +369,25 @@ const ICONS_MAP = { blue:'var(--blue-bg)', teal:'var(--teal-bg)', amber:'var(--a
 const ICON_COLORS = Object.keys(ICONS_MAP);
 
 const DEFAULT_TOOLS = [
+  {id:1,name:'PDF24 Tools',tags:['עבודה עם PDF','מיזוג מסמכים','פיצול PDF','הכנת חומר לתלמידים','המרת קבצים','OCR'],shortHe:'24 כלים חינמיים לעבודה עם PDF — מיזוג, פיצול, המרה, עריכה',shortEn:'24 free PDF tools — merge, split, convert, edit and compress',fullHe:'PDF24 הוא אוסף של 24 כלים מקוונים חינמיים לחלוטין לעבודה עם קבצי PDF. מיזוג קבצים, פיצול, דחיסה, עריכה, חתימה, המרת תמונות ל-PDF, הוספת סימני מים, מספרי עמודים, OCR ועוד. אינו דורש התקנה ועובד ישירות בדפדפן.',fullEn:'PDF24 offers 24 fully free online PDF tools — merge, split, compress, edit, sign, convert images, add watermarks, page numbers, OCR and more. No installation needed, works directly in the browser.',whyEduHe:'מורים מקבלים חומרים ממקורות שונים — קובץ מהמפקחת, דף מהספר, מסמך ממשרד החינוך. PDF24 מאפשר למזג, לחתוך ולהכין חבילת חומרים מסודרת לתלמידים בלי להתקין כלום ובלי לשלם.',whyEduEn:'Teachers receive materials from many sources. PDF24 lets you merge, crop, and package clean study materials for students — free, no installation needed.',tipHe:'גררו כמה קבצי PDF לכלי המיזוג, קבעו סדר ולחצו מיזוג — תוך 10 שניות יש חבילת חומר לימוד אחת מסודרת.',tipEn:'Drag multiple PDFs into the merge tool, set the order, click merge — in 10 seconds you have one clean study packet.',url:'https://tools.pdf24.org/he/',video:'',guide:'',icon:'📋',iconBg:'coral',favicon:'https://tools.pdf24.org/favicon.ico',cat:2,subj:0,pricing:'free',difficulty:'easy',lang:'multilang',mobile:true,login:false,hasVideo:false,featured:true},
+  {id:2,name:'GuyAI',tags:['מערך שיעור','יצירת מבחנים','יצירת שאלות','הכנה לבגרות','שיעורי בית','צילום שאלה'],shortHe:'מורה פרטי AI ישראלי — פתרון תרגילים, מבחנים ואימון 24/7',shortEn:'Israeli AI private tutor — exercises, exams and practice 24/7',fullHe:'GuyAI הוא מורה פרטי AI שפותח בישראל לתלמידי תיכון ואקדמיה. כולל פתרון תרגילים בצילום, פתרון מבחנים מ-PDF, מחולל מבחנים, סיכומים, אבחון רמה ותוכנית לימוד אישית. ממשק עברי מלא, מותאם לתוכנית הלימודים הישראלית.',fullEn:'GuyAI is an Israeli AI private tutor for high school and university. Photo exercise solving, PDF exam solving, quiz generator, summaries, level diagnosis, and personalized study plans. Full Hebrew UI, aligned with the Israeli curriculum.',whyEduHe:'GuyAI בנוי סביב הצרכים של התלמיד הישראלי — תוכנית הלימודים, הבגרויות ושפת הממשק. מורים יכולים לבנות מבחנים, מערכי שיעור ולעקוב אחר תלמידים — הכל בעברית.',whyEduEn:'GuyAI is built around Israeli student needs — the curriculum, Bagrut exams, and Hebrew interface. Teachers can build tests, lesson plans, and track student progress — all in Hebrew.',tipHe:'השתמשו ב"סטודיו מערכי שיעור AI" בתפריט המורים — הזינו נושא ורמת כיתה וקבלו מערך שיעור מובנה תוך דקות.',tipEn:'Use the "AI Lesson Plan Studio" in the teachers menu — enter a topic and grade level and get a structured lesson plan in minutes.',url:'https://www.guyai.co.il/',video:'',guide:'',icon:'🧑‍🏫',iconBg:'blue',favicon:'https://www.guyai.co.il/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'he',mobile:true,login:true,hasVideo:false,featured:true},
+  {id:3,name:'NotebookLM',tags:['סיכום מסמך','הכנת חומרים','שאלות על טקסט','פודקאסט מחומר לימוד','מחקר'],shortHe:'כלי AI של גוגל לניתוח מסמכים, סיכום ויצירת פודקאסט',shortEn:'Google AI tool to analyze documents, summarize and create podcasts',fullHe:'NotebookLM הוא כלי AI של גוגל שמאפשר להעלות מסמכים, מצגות, קישורים ווידאו, ולשאול עליהם שאלות. הכלי מייצר סיכומים, ציר זמן, מפת נושאים, ואפילו פודקאסט שיחה בין שני קריינים על תוכן המסמך.',fullEn:'NotebookLM by Google lets you upload documents, slides, links, and videos, then ask questions about them. It generates summaries, timelines, topic maps, and even an audio podcast conversation based on your content.',whyEduHe:'מורה שצריך לסכם יחידה שלמה, לייצר שאלות מחומר קיים, או ליצור פודקאסט מרתק לתלמידים — NotebookLM עושה את זה מהחומרים שכבר יש לו. אין צורך לבנות מחדש.',whyEduEn:'A teacher who needs to summarize a unit, create questions from existing material, or produce an engaging podcast for students — NotebookLM does it all from materials you already have.',tipHe:'העלו את כל חומרי היחידה (מצגת + מאמר + וידאו), לחצו "Generate Podcast" — תוך דקות יש שיחה מעניינת בין שני קריינים על הנושא, שאפשר לשלוח לתלמידים.',tipEn:'Upload all unit materials (slides + article + video), click "Generate Podcast" — in minutes you have an engaging two-host conversation on the topic to share with students.',url:'https://notebooklm.google/',video:'',guide:'https://letsai.co.il/aitools/notebooklm/',icon:'📓',iconBg:'green',favicon:'https://notebooklm.google/favicon.ico',cat:0,subj:0,pricing:'free',difficulty:'easy',lang:'en',mobile:false,login:true,hasVideo:false,featured:true},
+  {id:4,name:'Claude',tags:['מערך שיעור','הכנת חומרים','יצירת שאלות','משוב לתלמידים','עיבוד מסמכים','כתיבת טקסטים'],shortHe:'עוזר AI מתקדם לכתיבה, ניתוח ויצירת חומרי הוראה',shortEn:'Advanced AI assistant for writing, analysis and teaching materials',fullHe:'Claude הוא עוזר AI של Anthropic, מצטיין במשימות כתיבה ארוכה, עיבוד מסמכים גדולים, יצירת חומרי הוראה מורכבים ומתן הסברים מעמיקים. תומך בהעלאת קבצי PDF, Word ותמונות לניתוח.',fullEn:'Claude by Anthropic excels at long-form writing, processing large documents, creating complex teaching materials, and giving deep explanations. Supports uploading PDFs, Word files and images for analysis.',whyEduHe:'כשצריך לכתוב מערך שיעור מפורט, לסכם מאמר ארוך, לכתוב גרסאות מותאמות של אותו טקסט לרמות שונות, או לנסח משוב עדין לתלמיד — Claude נותן תוצאות איכותיות גם על משימות ארוכות ומורכבות.',whyEduEn:'When you need a detailed lesson plan, a long article summarized, the same text adapted for different levels, or carefully worded student feedback — Claude delivers quality results even on long, complex tasks.',tipHe:'העלו קובץ PDF של ספר לימוד ובקשו: "חלץ את הרעיונות המרכזיים מהפרק הזה וכתוב 3 שאלות לדיון כיתתי" — תוך רגע יש לכם חומר לשיעור.',tipEn:'Upload a textbook PDF and ask: "Extract the key ideas from this chapter and write 3 discussion questions" — instant lesson material.',url:'https://claude.ai/',video:'',guide:'',icon:'🤍',iconBg:'purple',favicon:'https://claude.ai/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:false,featured:true},
+  {id:5,name:'MagicSchool AI',tags:['מערך שיעור','דפי עבודה','יצירת מבחנים','משוב לתלמידים','רובריקה','הבדלה'],shortHe:'80+ כלים AI מיועדים במיוחד למורים — ללא נסיון נדרש',shortEn:'80+ AI tools built specifically for teachers — no experience needed',fullHe:'MagicSchool AI הוא כלי ייחודי שבנוי ספציפית למורים, עם למעלה מ-80 כלים מובנים: יצירת מבחנים, מערכי שיעור, דפי עבודה, כתיבת משוב לתלמידים, הכנת IEP, תרגום ועוד — בלי לנסח פרומפטים.',fullEn:'MagicSchool AI is built specifically for teachers, with 80+ built-in tools: quizzes, lesson plans, worksheets, student feedback, IEPs, translation, and more — no prompt engineering needed.',whyEduHe:'מורים שלא רוצים להתעסק עם "איך לכתוב פרומפט" — MagicSchool עונה על הצורך. בוחרים כלי מהרשימה, ממלאים פרטים פשוטים, ומקבלים תוצר. חוסך שעות עבודה שבועיות.',whyEduEn:'Teachers who don\'t want to deal with "how to write prompts" — MagicSchool answers that need. Pick a tool, fill simple details, get a result. Saves hours of weekly work.',tipHe:'נסו את "Rubric Generator" — הכניסו מטלה ותקבלו רובריקת הערכה עם קריטריונים ברמות שונות, מוכנה להדפסה.',tipEn:'Try "Rubric Generator" — enter an assignment and get a print-ready rubric with criteria at different performance levels.',url:'https://www.magicschool.ai/',video:'https://www.youtube.com/watch?v=_3gpmBTAhgU',guide:'',icon:'🏫',iconBg:'green',favicon:'https://www.magicschool.ai/favicon.ico',cat:0,subj:0,pricing:'free',difficulty:'easy',lang:'en',mobile:false,login:true,hasVideo:true,featured:true},
+  {id:6,name:'Perplexity',tags:['מחקר','חיפוש מידע','הכנת חומרים','מקורות מאומתים','שאלות עיון'],shortHe:'מנוע חיפוש AI עם מקורות מאומתים וסיכום מיידי',shortEn:'AI search engine with verified sources and instant summaries',fullHe:'Perplexity הוא מנוע חיפוש AI שמספק תשובות מסוכמות עם ציטוטים למקורות מאומתים. בניגוד ל-ChatGPT, הוא מחפש את האינטרנט בזמן אמת ומציין תמיד את המקור לכל מידע.',fullEn:'Perplexity is an AI search engine that gives summarized answers with citations to verified sources. Unlike ChatGPT, it searches the web in real time and always cites the source of every piece of information.',whyEduHe:'כשמכינים שיעור על נושא עכשווי — Perplexity מייצר סיכום מהיר עם קישורים למקורות שאפשר לצטט בפני תלמידים. מסייע גם לתלמידים ללמוד לחפש מידע אמין.',whyEduEn:'When preparing a lesson on a current topic — Perplexity generates a fast summary with links to citable sources. Also helps students learn to find reliable information.',tipHe:'הפנו תלמידים ל-Perplexity לעבודות חקר — כל תשובה מגיעה עם מקורות מאומתים שאפשר לבדוק, לעומת ChatGPT שלעיתים ממציא.',tipEn:'Send students to Perplexity for research projects — every answer comes with verified sources to check, unlike ChatGPT which sometimes fabricates.',url:'https://www.perplexity.ai/',video:'',guide:'',icon:'🔍',iconBg:'blue',favicon:'https://www.perplexity.ai/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:false,hasVideo:false,featured:false},
+  {id:7,name:'ChatGPT',tags:['מערך שיעור','דפי עבודה','יצירת שאלות','משוב לתלמידים','הבדלה','כתיבת טקסטים'],shortHe:'עוזר AI רב-תכליתי ליצירת תוכן, שאלות ומערכי שיעור',shortEn:'Multipurpose AI assistant for content, questions and lesson plans',fullHe:'ChatGPT של OpenAI הוא עוזר AI רב-תכליתי שמאפשר ליצור טקסטים, שאלות, מערכי שיעור, דפי עבודה ועוד. תומך בהעלאת תמונות, קבצים ומסמכים לניתוח.',fullEn:'ChatGPT by OpenAI is a multipurpose AI assistant for creating texts, questions, lesson plans, worksheets and more. Supports uploading images, files and documents for analysis.',whyEduHe:'ChatGPT מאפשר למורה להפוך כל נושא לחומר הוראה תוך דקות. אפשר לכתוב שאלות ברמות שונות, ליצור מערך שיעור, לנסח הסברים פשוטים, ולהתאים טקסטים לרמות קריאה שונות.',whyEduEn:'ChatGPT lets teachers turn any topic into teaching material in minutes — questions at different levels, lesson plans, simplified explanations, and texts adapted to different reading levels.',tipHe:'בקשו: "כתוב 6 שאלות על [נושא]: 2 ידע, 2 הבנה, 2 יישום לפי טקסונומיית בלום" — מקבלים מבחן מאוזן תוך שניות.',tipEn:'Ask: "Write 6 questions on [topic]: 2 knowledge, 2 comprehension, 2 application per Bloom\'s taxonomy" — you get a balanced quiz in seconds.',url:'https://chatgpt.com/',video:'',guide:'',icon:'🤖',iconBg:'blue',favicon:'https://chatgpt.com/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:false,featured:true},
+  {id:8,name:'Gemini',tags:['מערך שיעור','הכנת חומרים','יצירת תמונות','סיכום מסמך','Google Workspace'],shortHe:'AI של גוגל — כתיבה, תמונות ושילוב עם Google Workspace',shortEn:'Google AI — writing, images and Google Workspace integration',fullHe:'Gemini הוא עוזר ה-AI של גוגל שמשתלב ישירות ב-Google Docs, Slides ו-Sheets, ותומך גם ביצירת תמונות. מאפשר לסכם מסמכים, ליצור מצגות, לנתח נתונים ולכתוב תוכן, הכל בתוך הסביבה המוכרת של גוגל.',fullEn:'Gemini is Google\'s AI assistant that integrates directly with Google Docs, Slides, and Sheets, and supports image generation. Summarize documents, create presentations, analyze data, and write content — all inside Google\'s familiar environment.',whyEduHe:'מורים שכבר עובדים עם Google for Education לא צריכים לעבור כלי — Gemini נמצא בדיוק שם. בנוסף, Gemini Advanced מאפשר יצירת תמונות ישירות ב-Docs.',whyEduEn:'Teachers already using Google for Education don\'t need to switch tools — Gemini is right there. Gemini Advanced also lets you generate images directly inside Docs.',tipHe:'ב-Google Slides: לחצו "עזר ב-AI", הכניסו נושא ומספר שקופיות — תקבלו מצגת מלאה תוך 30 שניות.',tipEn:'In Google Slides: click "Help me visualize", enter topic and slide count — get a full presentation in 30 seconds.',url:'https://gemini.google.com/',video:'',guide:'',icon:'✨',iconBg:'amber',favicon:'https://gemini.google.com/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:false,featured:false},
+  {id:9,name:'Google AI Studio',tags:['בניית כלים','עיבוד מסמכים','הכנת חומרים','יצירת שאלות','API'],shortHe:'סביבת AI מתקדמת של גוגל לבניית כלים חינוכיים',shortEn:'Google\'s advanced AI environment for building educational tools',fullHe:'Google AI Studio מאפשר לעבוד ישירות עם מודל Gemini בצורה מתקדמת — יצירת פרומפטים מורכבים, עיבוד קבצים גדולים, הגדרת הוראות קבועות, ובניית כלים פשוטים לשימוש חוזר. ניגשים לו בלי צורך בתשלום.',fullEn:'Google AI Studio lets you work directly with Gemini in an advanced mode — complex prompts, large file processing, persistent instructions, and building simple reusable tools. Accessible without payment.',whyEduHe:'מורים שרוצים ליצור כלי AI מותאם אישית — למשל "תמיד עבוד בעברית וענה כמורה לביולוגיה" — AI Studio מאפשר להגדיר הוראות קבועות שנשמרות, מה שחוסך זמן בכל שיחה.',whyEduEn:'Teachers wanting a custom AI tool — e.g., "always work in Hebrew and respond as a biology teacher" — AI Studio lets you set persistent instructions that save time on every conversation.',tipHe:'הגדירו System Instruction: "אתה מורה לכימיה לכיתות ט-יב. תמיד ענה בעברית. תמיד הצג נוסחאות בצורה ברורה." — כל שיחה חדשה מתחילה עם הגדרות אלו.',tipEn:'Set a System Instruction: "You are a chemistry teacher for grades 9-12. Always answer in Hebrew. Always present formulas clearly." — every new conversation starts with these settings.',url:'https://aistudio.google.com/',video:'',guide:'',icon:'🔬',iconBg:'teal',favicon:'https://aistudio.google.com/favicon.ico',cat:9,subj:0,pricing:'free',difficulty:'medium',lang:'en',mobile:false,login:true,hasVideo:false,featured:false},
+  {id:10,name:'Gemini Image Generation',tags:['יצירת תמונות','איורים','ויזואלים לשקופיות','תמונות לחומר לימוד','עיצוב'],shortHe:'יצירת תמונות AI איכותיות עם Imagen 3 של גוגל',shortEn:'High-quality AI image generation with Google\'s Imagen 3',fullHe:'Gemini Image Generation מאפשר ליצור תמונות איכותיות מתיאור טקסטואלי עם מודל Imagen 3 של גוגל. נגיש דרך Gemini Advanced, מיועד לאיורים, עיצוב ויזואלי ויצירת תמונות לחומרי לימוד.',fullEn:'Gemini Image Generation creates high-quality images from text descriptions using Google\'s Imagen 3 model. Accessible through Gemini Advanced, designed for illustrations, visual design, and creating images for learning materials.',whyEduHe:'במקום לחפש שעות אחר תמונה שמתאימה בדיוק לנושא, מתארים במילים מה רוצים ומקבלים איור מדויק. מתאים לדפי עבודה, מצגות ופוסטרים לכיתה.',whyEduEn:'Instead of searching for hours for exactly the right image, describe what you want in words and get a precise illustration. Great for worksheets, presentations, and classroom posters.',tipHe:'לאיור מדעי — כתבו: "תרשים פשוט ונקי של מחזור החנקן עם חיצים, ברקע לבן, סגנון ספר לימוד" — מקבלים איור ישיר לדף עבודה.',tipEn:'For a science illustration: "Simple clean diagram of the nitrogen cycle with arrows, white background, textbook style" — ready for a worksheet.',url:'https://gemini.google/overview/image-generation/',video:'',guide:'',icon:'🖼️',iconBg:'pink',favicon:'https://www.google.com/favicon.ico',cat:4,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:false,login:true,hasVideo:false,featured:false},
+  {id:11,name:'Gamma',tags:['יצירת מצגות','הכנת חומרים','מצגת לשיעור','סיכום נושא','הכנה מהירה'],shortHe:'יצירת מצגות מקצועיות מלאות מתוך טקסט תוך שניות',shortEn:'Create full professional presentations from text in seconds',fullHe:'Gamma מייצרת מצגת מלאה תוך 30 שניות — מקלידים נושא ומספר שקופיות ומקבלים עיצוב, תוכן ותמונות. אפשר לערוך, לשנות עיצוב ולייצא ל-PDF או PowerPoint.',fullEn:'Gamma generates a full presentation in 30 seconds — type a topic and number of slides and get design, content, and images. Edit, change design, and export to PDF or PowerPoint.',whyEduHe:'כשצריך להכין מצגת לשיעור מחר בבוקר — Gamma היא הפתרון. אין צורך בניסיון עיצובי. בוחרים נושא, רמת כיתה, ותוך דקה יש מצגת שנראית מקצועית.',whyEduEn:'When you need to prepare a lesson presentation for tomorrow — Gamma is the answer. No design experience needed. Choose topic and grade level, and in a minute you have a professional-looking presentation.',tipHe:'ציינו בפרומפט: "מצגת על [נושא] ל-10 שקופיות, לכיתה ט\', ברמת פשטות גבוהה, כולל שאלות חשיבה" — מקבלים מצגת מותאמת גיל.',tipEn:'In the prompt: "Presentation on [topic] for 10 slides, 9th grade, high simplicity level, include thinking questions" — age-appropriate result.',url:'https://gamma.app/',video:'https://www.youtube.com/watch?v=7bF7IUVfBcU',guide:'',icon:'⚡',iconBg:'amber',favicon:'https://gamma.app/favicon.ico',cat:3,subj:0,pricing:'partial',difficulty:'easy',lang:'en',mobile:false,login:true,hasVideo:true,featured:false},
+  {id:12,name:'Canva',tags:['יצירת מצגות','דפי עבודה','עיצוב גרפי','עלון הורים','כרזה לכיתה','תבניות מוכנות'],shortHe:'עיצוב מצגות, דפי עבודה וחומרים ויזואליים עם AI',shortEn:'Design presentations, worksheets and visual materials with AI',fullHe:'Canva היא פלטפורמת עיצוב עם AI מובנה — יצירת מצגות, דפי עבודה, כרזות ועלוני הורים. Magic Write כותב תוכן לפי בקשה, Magic Design מייצר פריסה אוטומטית, ויש אלפי תבניות חינוכיות מוכנות.',fullEn:'Canva is a design platform with built-in AI — create presentations, worksheets, posters, and parent newsletters. Magic Write drafts content on request, Magic Design auto-generates layouts, and thousands of education templates are available.',whyEduHe:'גם מורים בלי ניסיון עיצובי מייצרים עם Canva חומרים מקצועיים. הרווח האמיתי הוא הזמן: בוחרים תבנית, מחליפים טקסט, ומשתמשים ב-Magic Write לניסוח — העלון מוכן לפני שהזמנקה נגמרת.',whyEduEn:'Even teachers without design experience create professional materials with Canva. The real gain is time: pick a template, swap text, use Magic Write — the handout is done before the break ends.',tipHe:'לפני יום הורים — תבנית "Parent Newsletter", החליפו כותרת, לחצו Magic Write ← "קצר ל-3 נקודות בשפה חיובית". מוכן תוך שתי דקות.',tipEn:'Before parent evening — "Parent Newsletter" template, swap headline, click Magic Write ← "Summarize into 3 positive bullet points". Done in two minutes.',url:'https://www.canva.com/',video:'',guide:'',icon:'🎨',iconBg:'teal',favicon:'https://www.canva.com/favicon.ico',cat:3,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:false,featured:true},
+  {id:13,name:'ivrit.ai — תמלול חינמי',tags:['תמלול','תמלול עברית','הכנת חומרים','נגישות','תיעוד שיעור'],shortHe:'תמלול חינמי לעברית מדוברת — ממשק פשוט ללא הרשמה',shortEn:'Free Hebrew speech transcription — simple interface, no sign-up',fullHe:'ivrit.ai מציעה כלי תמלול חינמי לעברית מדוברת, מבוסס על מודל Whisper המותאם לעברית. מעלים קובץ אודיו או וידאו ומקבלים תמליל טקסט תוך דקות. ממשק עברי פשוט, אינו דורש הרשמה.',fullEn:'ivrit.ai offers a free Hebrew speech transcription tool based on a Hebrew-adapted Whisper model. Upload an audio or video file and get a text transcript in minutes. Simple Hebrew interface, no sign-up required.',whyEduHe:'תמלול שיעור, הרצאה, או ראיון בעברית — ivrit.ai מייצרת טקסט שאפשר לערוך, לסכם ולשלוח לתלמידים. מיוחד לתוכן עברי שכלים אחרים לא מתמללים מספיק טוב.',whyEduEn:'Transcribing a lesson, lecture, or Hebrew interview — ivrit.ai generates text you can edit, summarize, and send to students. Especially useful for Hebrew content that other tools transcribe poorly.',tipHe:'הקליטו הסבר קולי של נושא, העלו ל-ivrit.ai — תוך דקות יש לכם טקסט שאפשר לתקן ולהפוך לדף הסבר מודפס לתלמידים.',tipEn:'Record an audio explanation of a topic, upload to ivrit.ai — in minutes you have text to edit and turn into a printed explanation sheet for students.',url:'https://www.ivrit.ai/he/174-2/',video:'',guide:'',icon:'🎙️',iconBg:'purple',favicon:'https://www.ivrit.ai/favicon.ico',cat:6,subj:0,pricing:'free',difficulty:'easy',lang:'he',mobile:false,login:false,hasVideo:false,featured:false},
+  {id:14,name:'ElevenLabs',tags:['יצירת אודיו','הקראת טקסט','נגישות','קריינות','יצירת תוכן'],shortHe:'יצירת קריינות ואודיו מטקסט עם קולות AI ריאליסטיים',shortEn:'Create voiceovers and audio from text with realistic AI voices',fullHe:'ElevenLabs מייצרת קריינות AI איכותית וריאליסטית מטקסט כתוב. מאפשרת לבחור מאות קולות, לשכפל קול, ולייצא קבצי אודיו MP3 לשימוש בסרטונים, מצגות ותכנים חינוכיים.',fullEn:'ElevenLabs generates high-quality, realistic AI voiceovers from written text. Choose from hundreds of voices, clone voices, and export MP3 audio files for use in videos, presentations, and educational content.',whyEduHe:'מורים שמכינים סרטוני הסבר, פודקאסטים חינוכיים, או חומר נגיש לתלמידים עם לקות ראייה — ElevenLabs ממיר כל טקסט לקריינות מקצועית בלי לרכוש ציוד הקלטה.',whyEduEn:'Teachers creating explanation videos, educational podcasts, or accessible materials for visually impaired students — ElevenLabs converts any text to professional voiceover without recording equipment.',tipHe:'כתבו סיכום קצר של נושא, הדביקו ב-ElevenLabs, בחרו קול נעים — תוך דקה יש קובץ אודיו שאפשר להכניס ישירות למצגת.',tipEn:'Write a short topic summary, paste into ElevenLabs, choose a pleasant voice — in one minute you have an audio file to embed directly in a presentation.',url:'https://elevenlabs.io/',video:'',guide:'',icon:'🔊',iconBg:'teal',favicon:'https://elevenlabs.io/favicon.ico',cat:7,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:false,featured:false},
+  {id:15,name:'Suno',tags:['יצירת מוזיקה','יצירת אודיו','שירי לימוד','שירי ילדים','פעילות כיתתית'],shortHe:'יצירת שירים מקוריים מתוך טקסט — AI מוזיקלי',shortEn:'Create original songs from text — musical AI',fullHe:'Suno מייצר שירים מלאים — לחן, מקצב, ביצוע ומילים — מתוך תיאור טקסטואלי קצר. אפשר לציין ז\'אנר, מצב רוח, שפה וסגנון ולקבל שיר גמור תוך שניות.',fullEn:'Suno generates full songs — melody, rhythm, performance and lyrics — from a short text description. Specify genre, mood, language, and style to get a finished song in seconds.',whyEduHe:'יצירת שיר על נושא לימודי היא דרך נפלאה לחזרה. "כתוב שיר פופ על מחזור המים לכיתה ה\'" — תוך שניות יש שיר מלא שהתלמידים ישמחו לשיר וליזכור.',whyEduEn:'Creating a song about a learning topic is a great way to review. "Write a pop song about the water cycle for 5th grade" — in seconds you have a full song students will enjoy singing and remembering.',tipHe:'לפני יחידת לימוד — צרו שיר ז\'אנגל קצר על המונחים המרכזיים בנושא ושלחו לתלמידים ב-WhatsApp. המוח זוכר מוזיקה טוב יותר מרשימות.',tipEn:'Before a unit — create a short jingle about the key terms and share it with students on WhatsApp. The brain remembers music better than lists.',url:'https://suno.com/home',video:'',guide:'',icon:'🎵',iconBg:'pink',favicon:'https://suno.com/favicon.ico',cat:7,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:false,featured:false},
+  {id:16,name:'Lovable',tags:['בניית אפליקציות','כלים דיגיטליים','פרויקט תלמידים','קידוד ללא קוד'],shortHe:'בניית אפליקציות ואתרים מלאים עם AI — ללא קוד',shortEn:'Build full apps and websites with AI — no coding required',fullHe:'Lovable מאפשרת לבנות אפליקציות ואתרים מלאים בשיחה רגילה עם AI. מתארים מה רוצים ומקבלים אפליקציה פונקציונלית עם עיצוב, מסד נתונים וממשק. מתאים למורים שרוצים לבנות כלים חינוכיים מותאמים.',fullEn:'Lovable lets you build full apps and websites through a regular AI conversation. Describe what you want and get a functional app with design, database, and interface. Perfect for teachers who want to build custom educational tools.',whyEduHe:'מורה שרוצה לבנות מחשבון ייחודי, מאגר שאלות אינטראקטיבי, או כלי מעקב לכיתה — Lovable מאפשרת זאת בלי לכתוב שורת קוד אחת. הכלי בנוי תוך שעה.',whyEduEn:'A teacher who wants to build a custom calculator, interactive question bank, or class tracker — Lovable makes it possible without writing a single line of code. The tool is built within an hour.',tipHe:'תארו לאפליקציה: "צור מחשבון ציונים לפי רובריקה עם 4 קריטריונים" — תקבלו כלי עובד שאפשר לשלוח מיד לתלמידים.',tipEn:'Describe to the app: "Create a grade calculator based on a rubric with 4 criteria" — you get a working tool to send immediately to students.',url:'https://lovable.dev/',video:'',guide:'',icon:'💜',iconBg:'purple',favicon:'https://lovable.dev/favicon.ico',cat:9,subj:0,pricing:'partial',difficulty:'medium',lang:'en',mobile:false,login:true,hasVideo:false,featured:false},
+  {id:17,name:'Base44',tags:['בניית אפליקציות','כלים דיגיטליים','פרויקט תלמידים','ניהול כיתה'],shortHe:'בניית אפליקציות ישראלית — AI שמבין עברית ובונה כלים',shortEn:'Israeli app builder — AI that understands Hebrew and builds tools',fullHe:'Base44 היא פלטפורמה ישראלית לבניית אפליקציות עם AI. מתארים מה רוצים בעברית ומקבלים אפליקציה עובדת עם עיצוב, מסד נתונים וממשק. כולל תמיכה בתשתית Backend.',fullEn:'Base44 is an Israeli app-building platform with AI. Describe what you want in Hebrew and get a working app with design, database, and interface. Includes Backend infrastructure support.',whyEduHe:'כמו Lovable אבל בעברית — מורים ישראלים יכולים לבנות כלי מעקב, מאגר שאלות, לוח ניהול כיתה, או כל כלי חינוכי אחר ישירות בעברית.',whyEduEn:'Like Lovable but in Hebrew — Israeli teachers can build tracking tools, question banks, class management boards, or any educational tool directly in Hebrew.',tipHe:'בנו "מחשבון הצגת תוצאות מבחן כיתתי" — הזינו ציוני הכיתה וקבלו גרף פיזור + ממוצע + הצעות להתאמה. בונה תוך דקות.',tipEn:'Build a "class test results display calculator" — enter class grades and get a scatter graph + average + adaptation suggestions. Builds in minutes.',url:'https://base44.com/',video:'',guide:'',icon:'🔧',iconBg:'coral',favicon:'https://base44.com/favicon.ico',cat:9,subj:0,pricing:'partial',difficulty:'medium',lang:'he',mobile:false,login:true,hasVideo:false,featured:false},
+  {id:18,name:'WebSim',tags:['בניית אפליקציות','ויזואליזציה','פעילות כיתתית','כלים דיגיטליים','סימולציות'],shortHe:'יצירת אתרים, כלים וסימולציות אינטראקטיביות מתיאור',shortEn:'Create websites, tools and interactive simulations from a description',fullHe:'WebSim יוצר אתרים ואפליקציות אינטראקטיביות מתיאור טקסטואלי קצר. אפשר לבקש משחק חינוכי, סימולציה, כלי חישוב או ויזואליזציה — ומקבלים דף HTML פועל שאפשר לשתף מיידית.',fullEn:'WebSim creates interactive websites and apps from a short text description. Request an educational game, simulation, calculator, or visualization — and get a working HTML page you can share instantly.',whyEduHe:'מורה שרוצה סימולציה ויזואלית לנושא (תנועת גלים, גרף פונקציה, מפת זמן היסטורית) — WebSim בונה אותה תוך דקות, בלי צורך בידע טכני.',whyEduEn:'A teacher wanting a visual simulation for a topic (wave motion, function graph, historical timeline map) — WebSim builds it in minutes, no technical knowledge needed.',tipHe:'בקשו: "צור סימולציה אינטראקטיבית של מטוטלת שמדגימה תנופה מחזורית עם שינוי אורך החוט" — מקבלים כלי ויזואלי מוכן לשיעור.',tipEn:'Ask: "Create an interactive pendulum simulation demonstrating periodic motion with adjustable string length" — get a visual tool ready for class.',url:'https://websim.com/',video:'',guide:'',icon:'🌐',iconBg:'blue',favicon:'https://websim.com/favicon.ico',cat:9,subj:0,pricing:'partial',difficulty:'medium',lang:'en',mobile:false,login:true,hasVideo:false,featured:false},
+];
   {id:1,name:'ChatGPT',shortHe:'יצירת תוכן, מערכי שיעור ושאלות לכל מקצוע',shortEn:'Content creation, lesson plans and questions for any subject',fullHe:'ChatGPT הוא כלי בינה מלאכותית של OpenAI המאפשר ליצור טקסטים, מערכי שיעור, שאלות בחינה ומשימות. מורים רבים משתמשים בו ליצירת חומרים מותאמים לרמת הכיתה, סיכום נושאים, בניית פעילויות והתאמת טקסטים לתלמידים מתקשים.',fullEn:'ChatGPT by OpenAI helps teachers generate lesson plans, quizzes, worksheets, and differentiated content. Widely used for summarizing topics, adapting texts, and creating classroom activities.',whyEduHe:'ChatGPT מאפשר למורה להפוך כל נושא לחומר הוראה תוך דקות. אפשר לבקש ממנו לכתוב שאלות ברמות שונות, ליצור מערך שיעור מובנה, לנסח הסברים פשוטים לתלמידים מתקשים, ולהתאים טקסטים לרמות קריאה שונות.',whyEduEn:'ChatGPT lets teachers turn any topic into teaching material in minutes — write questions at different levels, build structured lesson plans, simplify explanations for struggling students, and adapt texts to different reading levels.',tipHe:'השתמשו בפקודה: "כתוב 5 שאלות על [נושא] ברמות חשיבה שונות לפי בלום" — תקבלו שאלות מוכנות לשימוש מיידי.',tipEn:'Try: "Write 5 questions on [topic] at different Bloom\'s taxonomy levels" — you\'ll get ready-to-use questions instantly.',url:'https://chatgpt.com',video:'https://www.youtube.com/watch?v=jdpFAg4ELAI',icon:'🤖',iconBg:'blue',favicon:'https://chatgpt.com/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:true,featured:true},
   {id:2,name:'Canva Magic Studio',shortHe:'עיצוב מצגות, דפי עבודה וחומרים ויזואליים עם AI',shortEn:'Design presentations, worksheets and visual materials with AI',fullHe:'Canva Magic Studio מוסיפה יכולות AI לפלטפורמת העיצוב הפופולרית. יצירת מצגות, דפי עבודה, פוסטרים ועלונים בקלות, כולל יצירת תמונות מתיאור טקסטואלי ועריכה אוטומטית.',fullEn:'Canva Magic Studio brings AI to the popular design platform. Create presentations, worksheets, and posters easily with AI image generation and auto-layout features.',whyEduHe:'Canva מאפשרת לכל מורה — גם ללא ניסיון בעיצוב — ליצור חומרים ויזואליים מרשימים. בכמה לחיצות אפשר לייצר דף עבודה, כרזה לכיתה, או מצגת מלאה עם עיצוב מקצועי.',whyEduEn:'Canva empowers every teacher — even without design experience — to create impressive visual materials. In just a few clicks you can produce worksheets, classroom posters, or fully designed presentations.',tipHe:'השתמשו בתבניות "Education" של Canva כנקודת פתיחה, ואז בקשו מ-Magic Write לכתוב את התוכן ישירות לתוך השקופיות.',tipEn:'Start from Canva\'s "Education" templates, then use Magic Write to generate content directly inside the slides.',url:'https://canva.com',video:'https://www.youtube.com/watch?v=_OmM3o7lcVs',icon:'🎨',iconBg:'teal',favicon:'https://canva.com/favicon.ico',cat:3,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:true,featured:true},
   {id:3,name:'Gemini for Workspace',shortHe:'עוזר AI ישירות בתוך Google Docs, Slides ו-Sheets',shortEn:'AI assistant built into Google Docs, Slides and Sheets',fullHe:'Gemini for Google Workspace מאפשר לעבוד עם AI בתוך הכלים המוכרים של גוגל. ניתן לסכם מסמכים, לכתוב טיוטות, ליצור שקופיות ולנתח נתונים ישירות מתוך Docs, Slides ו-Sheets.',fullEn:'Gemini for Google Workspace brings AI directly into Google Docs, Slides, and Sheets. Summarize documents, write drafts, generate slides, and analyze spreadsheet data.',whyEduHe:'מורים שכבר עובדים עם Google for Education לא צריכים לעבור כלי — Gemini נמצא בדיוק שם. אפשר לסכם מסמך ארוך, לכתוב טיוטת מכתב להורים, או לייצר שקופיות מתוך רשימת נושאים.',whyEduEn:'Teachers already using Google for Education don\'t need to switch tools — Gemini is right there. Summarize long documents, draft parent letters, or generate slides from a topic list.',tipHe:'ב-Google Slides: לחצו על "עזר ב-AI", הכניסו נושא השיעור ומספר השקופיות הרצוי — תקבלו מצגת בסיסית תוך 30 שניות.',tipEn:'In Google Slides: click "Help me visualize", enter your lesson topic and slide count — you\'ll have a basic presentation in 30 seconds.',url:'https://workspace.google.com/intl/he/',video:'https://www.youtube.com/watch?v=xNcSjCkAh48',icon:'✨',iconBg:'amber',favicon:'https://workspace.google.com/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:true,featured:true},
@@ -312,7 +407,7 @@ const DEFAULT_TOOLS = [
 // ─── STATE ───────────────────────────────────────────────────────
 let LANG = 'he';
 let tools = loadTools();
-let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeChip:'all' };
+let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeTag:'' };
 let adminTab = 'add';
 let logoClicks = 0, logoTimer = null;
 
@@ -411,6 +506,7 @@ function renderAddTab(){
     <div class="ai-status" id="ai-status"></div>
     <div class="divider"></div>
     <div class="form-row"><label class="form-label">${t('toolName')}</label><input class="form-input" id="f-name" type="text" placeholder="ChatGPT, Canva..."></div>
+    <div class="form-row"><label class="form-label">${LANG==='he'?'תגיות שימוש (מופרדות בפסיק)':'Usage tags (comma-separated)'}</label><input class="form-input" id="f-tags" type="text" placeholder="${LANG==='he'?'מערך שיעור, דפי עבודה, מבחן...':'lesson plan, worksheets, quiz...'}"></div>
     <div class="form-row"><label class="form-label">${t('shortDescHe')}</label><input class="form-input" id="f-short-he" type="text"></div>
     <div class="form-row"><label class="form-label">${t('shortDescEn')}</label><input class="form-input" id="f-short-en" type="text"></div>
     <div class="form-row"><label class="form-label">${t('fullDescHe')}</label><textarea class="form-textarea" id="f-full-he" style="height:80px"></textarea></div>
@@ -423,6 +519,7 @@ function renderAddTab(){
       <div class="form-row"><label class="form-label">${t('urlField')}</label><input class="form-input" id="f-url" type="url" placeholder="https://..."></div>
       <div class="form-row"><label class="form-label">${t('videoUrl')}</label><input class="form-input" id="f-video" type="url" placeholder="https://youtube..."></div>
     </div>
+    <div class="form-row"><label class="form-label">${LANG==='he'?'קישור למדריך הכלי':'Guide / tutorial URL'}</label><input class="form-input" id="f-guide" type="url" placeholder="https://..."></div>
     <div class="form-3col">
       <div class="form-row"><label class="form-label">${t('cat')}</label><select class="form-select" id="f-cat">${catOptions}</select></div>
       <div class="form-row"><label class="form-label">${t('subj')}</label><select class="form-select" id="f-subj">${subjOptions}</select></div>
@@ -460,25 +557,25 @@ Return ONLY valid JSON, no markdown, no extra text.
 
 {
   "name": "exact tool name",
+  "tags": ["3-6 specific Hebrew use-case tags for teachers, e.g.: מערך שיעור, דפי עבודה, שאלות מבחן, משוב לתלמידים, הכנה לבגרות, פעילות כיתתית, הנגשה, תמלול שיעור, סיכום מסמך, עלון הורים, כרטיסיות זיכרון, מיזוג PDF, צילום שאלה, רובריקה, IEP"],
   "shortHe": "תיאור קצר של הכלי בעברית, עד 12 מילים",
   "shortEn": "Short description in English, up to 12 words",
   "fullHe": "הסבר מורחב בעברית על הכלי, 3-4 משפטים. מה הכלי עושה?",
   "fullEn": "Full description in English, 3-4 sentences. What does the tool do?",
-  "whyEduHe": "למה זה טוב לחינוך? 2-3 משפטים בעברית על הערך הפדגוגי למורים.",
-  "whyEduEn": "Why is this good for education? 2-3 sentences in English on the pedagogical value for teachers.",
-  "tipHe": "טיפ פדגוגי מעשי אחד בעברית — כיצד להשתמש בכלי בצורה חכמה בכיתה. משפט אחד עד שניים.",
-  "tipEn": "One practical pedagogical tip in English — how to use the tool smartly in class. One to two sentences.",
+  "whyEduHe": "למה זה טוב לחינוך? 2-3 משפטים בעברית על הערך הפדגוגי למורים. כתוב בגוף שני, ספציפי.",
+  "whyEduEn": "Why is this good for education? 2-3 sentences in English on the pedagogical value.",
+  "tipHe": "טיפ פדגוגי: הקשר ספציפי + פעולה מדויקת + תוצאה. ניתן לביצוע מחר.",
+  "tipEn": "Pedagogical tip: specific context + exact action + result. Actionable tomorrow.",
   "url": "official website URL",
   "videoUrl": "a real YouTube tutorial URL for this tool, or empty string",
   "icon": "single relevant emoji",
   "iconBg": "one of: blue,teal,amber,coral,purple,green,pink",
   "favicon": "https://domain.com/favicon.ico",
-  "catEn": "one of: ${catNames}",
-  "catIndex": "number 0-9 matching the category",
-  "subjIndex": "number 0-11 from: ${subjNames}",
-  "pricing": "one of: free,partial,paid",
-  "difficulty": "one of: easy,medium,advanced",
-  "lang": "one of: he,en,multilang",
+  "catIndex": "number 0-9: 0=lesson prep,1=text,2=pdf,3=presentations,4=images,5=quizzes,6=transcription,7=video,8=self-learning,9=general",
+  "subjIndex": "number 0-11: 0=all,1=math,2=hebrew,3=english,4=history,5=science,6=bible,7=civics,8=biology,9=chemistry,10=geography,11=special-ed",
+  "pricing": "free/partial/paid",
+  "difficulty": "easy/medium/advanced",
+  "lang": "he/en/multilang",
   "mobile": true or false,
   "login": true or false
 }`;
@@ -495,6 +592,7 @@ Return ONLY valid JSON, no markdown, no extra text.
     const json = JSON.parse(text);
     // fill form
     setVal('f-name', json.name || toolName);
+    setVal('f-tags', (json.tags||[]).join(', '));
     setVal('f-short-he', json.shortHe || '');
     setVal('f-short-en', json.shortEn || '');
     setVal('f-full-he', json.fullHe || '');
@@ -505,6 +603,7 @@ Return ONLY valid JSON, no markdown, no extra text.
     setVal('f-tip-en', json.tipEn || '');
     setVal('f-url', json.url || '');
     setVal('f-video', json.videoUrl || '');
+    setVal('f-guide', json.guideUrl || '');
     setVal('f-icon', json.icon || '🔧');
     setSelectByValue('f-cat', String(json.catIndex || 0));
     setSelectByValue('f-subj', String(json.subjIndex || 0));
@@ -529,8 +628,7 @@ function submitTool(){
   const catIdx = parseInt(document.getElementById('f-cat').value) || 0;
   const newTool = {
     id: Date.now(),
-    name,
-    shortHe: document.getElementById('f-short-he').value,
+    tags: (document.getElementById('f-tags').value||'').split(',').map(s=>s.trim()).filter(Boolean),
     shortEn: document.getElementById('f-short-en').value,
     fullHe: document.getElementById('f-full-he').value,
     fullEn: document.getElementById('f-full-en').value,
@@ -540,6 +638,7 @@ function submitTool(){
     tipEn: document.getElementById('f-tip-en').value,
     url: document.getElementById('f-url').value,
     video: document.getElementById('f-video').value,
+    guide: document.getElementById('f-guide').value,
     icon: document.getElementById('f-icon').value || '🔧',
     iconBg: ICON_COLORS[catIdx % ICON_COLORS.length],
     favicon: '',
@@ -605,8 +704,11 @@ function renderSettingsTab(){
       <div class="apikey-status" id="apikey-status"></div>
       <div style="font-size:11px;color:var(--text3);margin-top:6px">${t('apiKeyNotice')}</div>
     </div>
-    <div style="background:var(--surface2);border-radius:var(--rad);border:0.5px solid var(--border);padding:16px">
-      <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:10px">${t('passwordLabel')}</div>
+    <div style="background:var(--surface2);border-radius:var(--rad);border:0.5px solid var(--border);padding:16px;margin-top:12px">
+      <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:8px">${LANG==='he'?'איפוס מאגר הכלים':'Reset tool library'}</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${LANG==='he'?'מוחק את כל השינויים ומחזיר לרשימת הכלים המובנית.':'Deletes all changes and restores the built-in tool list.'}</div>
+      <button class="form-submit" style="background:var(--coral);height:38px;margin-top:0" onclick="resetToDefaults()">${LANG==='he'?'איפוס לברירת מחדל ⚠️':'Reset to defaults ⚠️'}</button>
+    </div>
       <div class="form-2col">
         <div><label class="form-label">${t('pwCurrent')}</label><input class="form-input" id="pw-current" type="password"></div>
         <div><label class="form-label">${t('pwNew')}</label><input class="form-input" id="pw-new" type="password"></div>
@@ -642,19 +744,22 @@ function getFiltered(){
   return tools.filter(tool=>{
     const q = state.searchQ.toLowerCase();
     if(q){
-      const hay = (tool.name+' '+tool.shortHe+' '+tool.shortEn+' '+(LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat])).toLowerCase();
+      const tagStr = (tool.tags||[]).join(' ');
+      const hay = (tool.name+' '+tool.shortHe+' '+tool.shortEn+' '+tagStr+' '+(LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat])).toLowerCase();
       if(!hay.includes(q)) return false;
     }
     if(state.activeCat>=0 && tool.cat!==state.activeCat) return false;
     if(state.activeSubj>=1 && tool.subj!==state.activeSubj && tool.subj!==0) return false;
     if(state.activePricing!=='all' && tool.pricing!==state.activePricing) return false;
-    if(state.activeChip==='free' && tool.pricing!=='free') return false;
-    if(state.activeChip==='hasVideo' && !tool.hasVideo) return false;
-    if(state.activeChip==='mobile' && !tool.mobile) return false;
-    if(state.activeChip==='hebrew' && tool.lang!=='multilang' && tool.lang!=='he') return false;
-    if(state.activeChip==='beginner' && tool.difficulty!=='easy') return false;
+    if(state.activeTag && !(tool.tags||[]).includes(state.activeTag)) return false;
     return true;
   });
+}
+
+function getAllTags(){
+  const counts = {};
+  tools.forEach(tool=>(tool.tags||[]).forEach(tag=>{ counts[tag]=(counts[tag]||0)+1; }));
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([tag,count])=>({tag,count}));
 }
 
 // ─── RENDER ───────────────────────────────────────────────────
@@ -678,15 +783,17 @@ function renderSidebar(){
   });
   html += `</div>`;
   document.getElementById('sidebar').innerHTML = html;
+  const mp = document.getElementById('mobile-sidebar-content');
+  if(mp && document.getElementById('mobile-sidebar-overlay').style.display !== 'none') mp.innerHTML = html;
 }
 
 function navItem(idx, label, count, active, action){
   return `<div class="nav-item${active?' active':''}" onclick="${action}"><span class="nav-item-label">${label}</span><span class="nav-count">${count}</span></div>`;
 }
 
-function setCat(i){ state.activeCat=i; renderAll(); }
-function setSubj(i){ state.activeSubj=i; renderAll(); }
-function setPrice(p){ state.activePricing=p; renderAll(); }
+function setCat(i){ state.activeCat=i; closeMobileMenu(); renderAll(); }
+function setSubj(i){ state.activeSubj=i; closeMobileMenu(); renderAll(); }
+function setPrice(p){ state.activePricing=p; closeMobileMenu(); renderAll(); }
 
 function renderContent(){
   const el = document.getElementById('content');
@@ -707,9 +814,15 @@ function diffLabel(d){ return d==='easy'?t('easy'):d==='medium'?t('medium'):t('a
 
 function renderList(){
   const filtered = getFiltered();
-  const chips = ['all','free','hasVideo','mobile','hebrew','beginner'];
-  const chipsHtml = chips.map(k=>`<button class="chip${state.activeChip===k?' active':''}" onclick="setChip('${k}')">${T[LANG].chips[k]}</button>`).join('');
+  const allTags = getAllTags();
   const catLabel = state.activeCat>=0 ? t('cats')[state.activeCat] : t('allTools');
+
+  // תגיות שימוש — שורה לחיצה
+  const tagsRow = `
+    <div class="chips-row">
+      <button class="chip${!state.activeTag?' active':''}" onclick="setTag('')">${LANG==='he'?'הכל':'All'}</button>
+      ${allTags.map(({tag,count})=>`<button class="chip${state.activeTag===tag?' active':''}" onclick="setTag('${tag.replace(/'/g,"\\'")}')"><span>${tag}</span><span style="opacity:.5;font-size:10px;margin-inline-start:4px">${count}</span></button>`).join('')}
+    </div>`;
 
   let cards = '';
   if(!filtered.length){
@@ -721,6 +834,9 @@ function renderList(){
       const iconContent = tool.favicon
         ? `<img src="${tool.favicon}" onerror="this.style.display='none';this.nextSibling.style.display='block'" alt=""><span style="display:none">${tool.icon}</span>`
         : tool.icon;
+      const usageTags = (tool.tags||[]).slice(0,3).map(tag=>
+        `<span class="tag t-use" style="cursor:pointer" onclick="event.stopPropagation();setTag('${tag.replace(/'/g,"\\'")}' )">${tag}</span>`
+      ).join('');
       return `<div class="card${tool.featured?' featured':''}" onclick="goDetail(${tool.id})">
         <div class="card-top">
           <div class="card-icon" style="background:${iconBg(tool.iconBg)}">${iconContent}</div>
@@ -731,13 +847,12 @@ function renderList(){
         </div>
         <div class="card-tags">
           <span class="tag t-cat">${cat}</span>
-          ${pricingTag(tool.pricing)}
-          ${tool.lang==='he'||tool.lang==='multilang'?`<span class="tag t-he">${t('he')}</span>`:''}
+          ${usageTags}
         </div>
         <div class="card-footer">
           <div style="display:flex;gap:8px">
             ${tool.hasVideo?`<span class="meta-badge"><span class="video-dot"></span>${t('hasVideo')}</span>`:''}
-            ${tool.mobile?`<span class="meta-badge">📱</span>`:''}
+            ${tool.pricing==='free'?`<span class="meta-badge" style="color:var(--teal)">✓ ${t('free')}</span>`:''}
           </div>
           <div class="card-btns">
             <button class="btn-xs" onclick="event.stopPropagation();goDetail(${tool.id})">${t('details')}</button>
@@ -754,10 +869,10 @@ function renderList(){
         <input class="search-input" id="search-input" type="text" placeholder="${t('searchPh')}" value="${state.searchQ}">
         <button class="search-btn">${t('search')}</button>
       </div>
-      <div class="chips-row">${chipsHtml}</div>
+      ${tagsRow}
     </div>
     <div class="results-header">
-      <div class="results-count">${filtered.length} ${t('results')} — ${catLabel}</div>
+      <div class="results-count">${filtered.length} ${t('results')}${state.activeTag?' — '+state.activeTag:' — '+catLabel}</div>
     </div>
     <div class="cards-grid">${cards}</div>
   `;
@@ -765,7 +880,7 @@ function renderList(){
 
 function goDetail(id){ state.page='detail'; state.selectedId=id; renderContent(); window.scrollTo(0,0); }
 function goList(){ state.page='list'; renderContent(); window.scrollTo(0,0); }
-function setChip(k){ state.activeChip=k; renderContent(); }
+function setTag(tag){ state.activeTag=tag; state.page='list'; renderContent(); }
 
 function faviconImg(tool){
   if(tool.favicon){
@@ -804,7 +919,8 @@ function renderDetail(id){
             <div class="detail-subtitle">${LANG==='he'?tool.shortHe:tool.shortEn}</div>
             <div class="detail-actions">
               <button class="btn-action primary" onclick="window.open('${tool.url}','_blank')">${t('open')}</button>
-              ${tool.hasVideo&&tool.video?`<button class="btn-action" onclick="window.open('${tool.video}','_blank')">${t('watch')}</button>`:''}
+              ${tool.hasVideo&&tool.video?`<button class="btn-action" onclick="window.open('${tool.video}','_blank')">🎬 ${t('watch')}</button>`:''}
+              ${tool.guide?`<button class="btn-action" onclick="window.open('${tool.guide}','_blank')">📖 ${LANG==='he'?'מדריך לכלי':'Tool guide'}</button>`:''}
             </div>
           </div>
         </div>
@@ -830,6 +946,7 @@ function renderDetail(id){
           <span class="tag t-subj">${subj}</span>
           ${pricingTag(tool.pricing)}
           <span class="tag t-he">${langLabel(tool.lang)}</span>
+          ${(tool.tags||[]).map(tag=>`<span class="tag t-use" style="cursor:pointer" onclick="setTag('${tag.replace(/'/g,"\\'")}');goList()">${tag}</span>`).join('')}
         </div>
 
         <button class="tech-toggle" onclick="toggleTech(this)" type="button">
@@ -858,6 +975,14 @@ function renderDetail(id){
   `;
 }
 
+function resetToDefaults(){
+  if(!confirm(LANG==='he'?'למחוק את כל הכלים ולחזור לרשימה המקורית?':'Delete all tools and restore the original list?')) return;
+  localStorage.removeItem(LS_KEY);
+  tools = JSON.parse(JSON.stringify(DEFAULT_TOOLS));
+  closeAdmin();
+  renderAll();
+}
+
 function toggleTech(btn){
   const bar = btn.nextElementSibling;
   const arrow = btn.querySelector('.tech-toggle-arrow');
@@ -866,8 +991,25 @@ function toggleTech(btn){
   arrow.classList.toggle('open', !isOpen);
 }
 
+function toggleMobileMenu(){
+  const overlay = document.getElementById('mobile-sidebar-overlay');
+  const panel = document.getElementById('mobile-sidebar-content');
+  panel.innerHTML = document.getElementById('sidebar').innerHTML;
+  overlay.style.display = 'flex';
+}
+function closeMobileMenu(){
+  document.getElementById('mobile-sidebar-overlay').style.display = 'none';
+}
+function checkMobile(){
+  const isMobile = window.innerWidth <= 768;
+  const menuBtn = document.getElementById('menu-btn');
+  if(menuBtn) menuBtn.style.display = isMobile ? 'flex' : 'none';
+}
+
 // ─── INIT ─────────────────────────────────────────────────────
 renderAll();
+checkMobile();
+window.addEventListener('resize', checkMobile);
 </script>
 </body>
 </html>
