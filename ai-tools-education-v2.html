@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מאגר כלי AI לחינוך</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0efe9;
+  --surface: #ffffff;
+  --surface2: #f5f4f0;
+  --border: rgba(0,0,0,0.09);
+  --border2: rgba(0,0,0,0.16);
+  --text: #18181a;
+  --text2: #5a5a58;
+  --text3: #9a9a96;
+  --blue: #185FA5;
+  --blue-bg: #E6F1FB;
+  --blue-text: #0C447C;
+  --teal: #0F6E56; --teal-bg: #E1F5EE; --teal-text: #085041;
+  --amber: #854F0B; --amber-bg: #FAEEDA; --amber-text: #633806;
+  --coral: #993C1D; --coral-bg: #FAECE7; --coral-text: #4A1B0C;
+  --purple: #534AB7; --purple-bg: #EEEDFE; --purple-text: #26215C;
+  --green: #3B6D11; --green-bg: #EAF3DE; --green-text: #173404;
+  --pink: #993556; --pink-bg: #FBEAF0; --pink-text: #4B1528;
+  --rad: 10px; --rad-lg: 14px; --rad-xl: 18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Assistant',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+body.ltr{font-family:'Inter',Arial,sans-serif;direction:ltr}
+body.rtl{direction:rtl}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.logo-mark{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;user-select:none}
+.logo-mark svg{width:18px;height:18px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.app-name{font-size:15px;font-weight:600;color:var(--text)}
+.app-name span{font-weight:300;color:var(--text2)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.lang-btn{padding:5px 12px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;font-size:13px;cursor:pointer;color:var(--text2);font-family:inherit;transition:all .15s}
+.lang-btn.active{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue);font-weight:500}
+
+/* ── LAYOUT ── */
+.main{display:flex;flex:1}
+.sidebar{width:220px;flex-shrink:0;background:var(--surface);border-inline-end:0.5px solid var(--border);padding:20px 12px;overflow-y:auto;position:sticky;top:56px;height:calc(100vh - 56px)}
+.content{flex:1;padding:24px;min-width:0;overflow-y:auto}
+
+/* ── SIDEBAR ── */
+.sidebar-section{margin-bottom:24px}
+.sidebar-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);padding:0 8px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--rad);cursor:pointer;transition:background .1s}
+.nav-item:hover{background:var(--surface2)}
+.nav-item.active{background:var(--blue-bg)}
+.nav-item-label{font-size:13px;color:var(--text)}
+.nav-item.active .nav-item-label{color:var(--blue-text);font-weight:500}
+.nav-count{font-size:11px;color:var(--text3);background:var(--surface2);padding:1px 7px;border-radius:99px}
+.nav-item.active .nav-count{background:rgba(24,95,165,.12);color:var(--blue-text)}
+
+/* ── SEARCH ── */
+.search-wrap{background:var(--surface);border-radius:var(--rad-lg);border:0.5px solid var(--border);padding:16px 20px;margin-bottom:16px}
+.search-row{display:flex;gap:8px;margin-bottom:12px}
+.search-input{flex:1;height:42px;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);padding:0 14px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--blue);background:white}
+.search-btn{height:42px;padding:0 20px;background:var(--blue);color:white;border:none;border-radius:var(--rad);font-size:14px;cursor:pointer;font-family:inherit;font-weight:500}
+.chips-row{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:4px 12px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;font-family:inherit}
+.chip.active{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue);font-weight:500}
+.chip:hover{background:white}
+
+/* ── CARDS ── */
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.results-count{font-size:13px;color:var(--text2)}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.card{background:var(--surface);border-radius:var(--rad-lg);border:0.5px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:box-shadow .15s,border-color .15s}
+.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08);border-color:var(--border2)}
+.card.featured{border-color:var(--blue);border-width:1.5px}
+.card-top{display:flex;align-items:flex-start;gap:12px}
+.card-icon{width:40px;height:40px;border-radius:var(--rad);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.card-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
+.card-short{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:11px;padding:2px 9px;border-radius:99px;font-weight:500}
+.t-cat{background:var(--blue-bg);color:var(--blue-text)}
+.t-subj{background:var(--green-bg);color:var(--green-text)}
+.t-free{background:var(--teal-bg);color:var(--teal-text)}
+.t-partial{background:var(--amber-bg);color:var(--amber-text)}
+.t-paid{background:var(--coral-bg);color:var(--coral-text)}
+.t-he{background:var(--purple-bg);color:var(--purple-text)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:0.5px solid var(--border);margin-top:auto}
+.meta-badge{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
+.video-dot{width:8px;height:8px;background:var(--pink);border-radius:99px;display:inline-block}
+.card-btns{display:flex;gap:6px}
+.btn-xs{font-size:12px;padding:4px 10px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;transition:background .1s}
+.btn-xs:hover{background:var(--surface2)}
+.btn-xs.primary{background:var(--blue);color:white;border-color:var(--blue);font-weight:500}
+.btn-xs.primary:hover{background:var(--blue-text)}
+.featured-badge{font-size:10px;background:var(--blue-bg);color:var(--blue-text);padding:2px 8px;border-radius:99px;font-weight:600}
+
+/* ── DETAIL ── */
+.detail-page{max-width:720px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;margin-bottom:20px;padding:6px 0}
+.back-btn:hover{color:var(--text)}
+.detail-card{background:var(--surface);border-radius:var(--rad-xl);border:0.5px solid var(--border);padding:28px;margin-bottom:16px}
+.detail-header{display:flex;gap:16px;margin-bottom:20px;align-items:flex-start}
+.detail-icon{width:56px;height:56px;border-radius:var(--rad-lg);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.detail-title{font-size:22px;font-weight:700;color:var(--text)}
+.detail-subtitle{font-size:14px;color:var(--text2);margin-top:4px}
+.detail-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn-action{padding:8px 18px;border-radius:var(--rad);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;border:0.5px solid var(--border2);background:transparent;color:var(--text);transition:all .15s}
+.btn-action.primary{background:var(--blue);color:white;border-color:var(--blue)}
+.btn-action.primary:hover{background:var(--blue-text)}
+.btn-action:hover{background:var(--surface2)}
+.detail-desc{font-size:14px;color:var(--text);line-height:1.8;margin-bottom:20px}
+.detail-sec-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.detail-field{background:var(--surface2);border-radius:var(--rad);padding:10px 14px}
+.detail-field-label{font-size:11px;color:var(--text3);margin-bottom:3px}
+.detail-field-value{font-size:13px;font-weight:500;color:var(--text)}
+.tags-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.related-section{background:var(--surface);border-radius:var(--rad-xl);border:0.5px solid var(--border);padding:20px}
+.related-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.related-card{border:0.5px solid var(--border);border-radius:var(--rad);padding:12px;cursor:pointer;transition:border-color .15s}
+.related-card:hover{border-color:var(--blue)}
+.related-icon{font-size:18px;margin-bottom:6px}
+.related-name{font-size:12px;font-weight:600;color:var(--text)}
+.related-cat{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── ADMIN PANEL ── */
+.admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;align-items:center;justify-content:center}
+.admin-modal{background:var(--surface);border-radius:var(--rad-xl);width:min(700px,95vw);max-height:90vh;overflow-y:auto;border:0.5px solid var(--border)}
+.admin-header{padding:20px 24px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:10}
+.admin-header-title{font-size:16px;font-weight:600;color:var(--text)}
+.admin-close{width:32px;height:32px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.admin-tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);padding:0 24px}
+.admin-tab{padding:10px 16px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text2);font-family:inherit;background:transparent;border-top:none;border-left:none;border-right:none;transition:all .15s}
+.admin-tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:500}
+.admin-body{padding:24px}
+.form-row{margin-bottom:14px}
+.form-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);padding:0 12px;font-size:14px;font-family:inherit;outline:none}
+.form-input{height:40px}
+.form-select{height:40px;cursor:pointer}
+.form-textarea{height:80px;padding:10px 12px;resize:vertical}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);background:white}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.form-submit{width:100%;height:44px;background:var(--blue);color:white;border:none;border-radius:var(--rad);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px}
+.form-submit:hover{background:var(--blue-text)}
+.form-submit:disabled{background:var(--text3);cursor:not-allowed}
+
+/* AI fill */
+.ai-fill-row{display:flex;gap:8px;margin-bottom:16px}
+.ai-fill-input{flex:1;height:42px;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);padding:0 14px;font-size:14px;font-family:inherit;outline:none}
+.ai-fill-input:focus{border-color:var(--blue);background:white}
+.ai-fill-btn{height:42px;padding:0 16px;background:var(--purple);color:white;border:none;border-radius:var(--rad);font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;white-space:nowrap}
+.ai-fill-btn:disabled{background:var(--text3);cursor:not-allowed}
+.ai-status{font-size:12px;color:var(--text3);margin-bottom:12px;min-height:18px}
+.ai-status.loading{color:var(--purple)}
+.ai-status.done{color:var(--teal)}
+.ai-status.error{color:var(--coral)}
+.divider{height:0.5px;background:var(--border);margin:16px 0}
+
+/* tools list in admin */
+.tool-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--rad);border:0.5px solid var(--border);margin-bottom:8px;background:var(--surface2)}
+.tool-row-icon{font-size:20px;flex-shrink:0}
+.tool-row-info{flex:1;min-width:0}
+.tool-row-name{font-size:13px;font-weight:600;color:var(--text)}
+.tool-row-cat{font-size:11px;color:var(--text3)}
+.tool-row-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-delete{padding:4px 10px;border-radius:var(--rad);border:0.5px solid rgba(153,60,29,.3);background:var(--coral-bg);color:var(--coral);font-size:12px;cursor:pointer;font-family:inherit}
+.btn-feature{padding:4px 10px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;color:var(--text3);font-size:12px;cursor:pointer;font-family:inherit}
+.btn-feature.on{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue)}
+
+/* api key */
+.apikey-wrap{background:var(--surface2);border-radius:var(--rad);border:0.5px solid var(--border);padding:16px;margin-bottom:16px}
+.apikey-label{font-size:12px;color:var(--text2);margin-bottom:6px}
+.apikey-row{display:flex;gap:8px}
+.apikey-input{flex:1;height:38px;border-radius:var(--rad);border:0.5px solid var(--border2);background:white;color:var(--text);padding:0 12px;font-size:13px;font-family:'Inter',monospace;outline:none}
+.apikey-input:focus{border-color:var(--blue)}
+.apikey-save{height:38px;padding:0 14px;background:var(--blue);color:white;border:none;border-radius:var(--rad);font-size:13px;cursor:pointer;font-family:inherit}
+.apikey-status{font-size:11px;color:var(--teal);margin-top:5px}
+.notice{font-size:12px;color:var(--text3);line-height:1.5;background:var(--amber-bg);color:var(--amber-text);border-radius:var(--rad);padding:10px 12px;margin-bottom:14px}
+
+/* password */
+.pw-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:flex;align-items:center;justify-content:center}
+.pw-box{background:var(--surface);border-radius:var(--rad-xl);padding:28px;width:300px;text-align:center}
+.pw-title{font-size:15px;font-weight:600;margin-bottom:12px}
+.pw-input{width:100%;height:40px;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);padding:0 12px;font-size:15px;letter-spacing:.2em;font-family:monospace;outline:none;text-align:center;margin-bottom:10px}
+.pw-input:focus{border-color:var(--blue)}
+.pw-btn{width:100%;height:40px;background:var(--blue);color:white;border:none;border-radius:var(--rad);font-size:14px;cursor:pointer;font-family:inherit}
+.pw-err{font-size:12px;color:var(--coral);margin-top:6px}
+.pw-cancel{font-size:12px;color:var(--text3);cursor:pointer;margin-top:8px;display:block}
+
+/* empty */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text2)}
+.empty-title{font-size:16px;font-weight:500;margin-bottom:4px}
+.empty-sub{font-size:13px}
+
+/* spinner */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
+</style>
+</head>
+<body class="rtl">
+
+<div id="app" style="display:flex;flex-direction:column;min-height:100vh">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <!-- לחיצה 5 פעמים על הלוגו פותחת אדמין -->
+    <div class="logo-mark" id="logo-secret" onclick="logoClick()">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="app-name" id="app-name">מאגר כלי AI לחינוך <span>/ AI Tools for Education</span></div>
+  </div>
+  <div class="topbar-right">
+    <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עברית</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar" id="sidebar"></div>
+  <div class="content" id="content"></div>
+</div>
+
+</div>
+
+<!-- PASSWORD OVERLAY -->
+<div id="pw-overlay" class="pw-overlay" style="display:none">
+  <div class="pw-box">
+    <div class="pw-title" id="pw-title">כניסה לניהול</div>
+    <input class="pw-input" id="pw-input" type="password" placeholder="••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="pw-btn" onclick="checkPw()" id="pw-btn">כניסה</button>
+    <div class="pw-err" id="pw-err"></div>
+    <span class="pw-cancel" onclick="closePw()">ביטול</span>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div id="admin-overlay" class="admin-overlay" style="display:none" onclick="adminOverlayClick(event)">
+  <div class="admin-modal" id="admin-modal">
+    <div class="admin-header">
+      <div class="admin-header-title" id="admin-title-text">ניהול המאגר</div>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="tab-add" onclick="switchTab('add')">הוסף כלי</button>
+      <button class="admin-tab" id="tab-manage" onclick="switchTab('manage')">ניהול כלים</button>
+      <button class="admin-tab" id="tab-settings" onclick="switchTab('settings')">הגדרות</button>
+    </div>
+    <div class="admin-body" id="admin-body"></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────
+const ADMIN_PASSWORD = '1234'; // שנה כאן
+const LS_KEY = 'aitools_data';
+const LS_APIKEY = 'aitools_apikey';
+
+const CATS_HE = ['הכנת חומרים','יצירת טקסטים','עבודה עם PDF','מצגות','יצירת תמונות','מבחנים ושאלונים','תמלול ותרגום','וידאו ואודיו','למידה עצמאית','כלים כלליים'];
+const CATS_EN = ['Lesson Prep','Text Creation','PDF Tools','Presentations','Image Generation','Quizzes & Tests','Transcription','Video & Audio','Self-Learning','General Tools'];
+const SUBJS_HE = ['כל המקצועות','מתמטיקה','עברית','אנגלית','היסטוריה','מדעים','תנ"ך','אזרחות','ביולוגיה','כימיה','גיאוגרפיה','חינוך מיוחד'];
+const SUBJS_EN = ['All Subjects','Math','Hebrew','English','History','Science','Bible','Civics','Biology','Chemistry','Geography','Special Ed'];
+const ICONS_MAP = { blue:'var(--blue-bg)', teal:'var(--teal-bg)', amber:'var(--amber-bg)', coral:'var(--coral-bg)', purple:'var(--purple-bg)', green:'var(--green-bg)', pink:'var(--pink-bg)' };
+const ICON_COLORS = Object.keys(ICONS_MAP);
+
+const DEFAULT_TOOLS = [
+  {id:1,name:'ChatGPT',shortHe:'יצירת תוכן, מערכי שיעור ושאלות לכל מקצוע',shortEn:'Content creation, lesson plans and questions for any subject',fullHe:'ChatGPT הוא כלי בינה מלאכותית של OpenAI המאפשר ליצור טקסטים, מערכי שיעור, שאלות בחינה ומשימות. מורים רבים משתמשים בו ליצירת חומרים מותאמים לרמת הכיתה, סיכום נושאים, בניית פעילויות והתאמת טקסטים לתלמידים מתקשים.',fullEn:'ChatGPT by OpenAI helps teachers generate lesson plans, quizzes, worksheets, and differentiated content. Widely used for summarizing topics, adapting texts, and creating classroom activities.',url:'https://chatgpt.com',video:'https://www.youtube.com/watch?v=jdpFAg4ELAI',icon:'🤖',iconBg:'blue',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:true,featured:true},
+  {id:2,name:'Canva Magic Studio',shortHe:'עיצוב מצגות, דפי עבודה וחומרים ויזואליים עם AI',shortEn:'Design presentations, worksheets and visual materials with AI',fullHe:'Canva Magic Studio מוסיפה יכולות AI לפלטפורמת העיצוב הפופולרית. יצירת מצגות, דפי עבודה, פוסטרים ועלונים בקלות, כולל יצירת תמונות מתיאור טקסטואלי ועריכה אוטומטית.',fullEn:'Canva Magic Studio brings AI to the popular design platform. Create presentations, worksheets, and posters easily with AI image generation and auto-layout features.',url:'https://canva.com',video:'https://www.youtube.com/watch?v=_OmM3o7lcVs',icon:'🎨',iconBg:'teal',cat:3,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:true,featured:true},
+  {id:3,name:'Gemini for Workspace',shortHe:'עוזר AI ישירות בתוך Google Docs, Slides ו-Sheets',shortEn:'AI assistant built into Google Docs, Slides and Sheets',fullHe:'Gemini for Google Workspace מאפשר לעבוד עם AI בתוך הכלים המוכרים של גוגל. ניתן לסכם מסמכים, לכתוב טיוטות, ליצור שקופיות ולנתח נתונים ישירות מתוך Docs, Slides ו-Sheets.',fullEn:'Gemini for Google Workspace brings AI directly into Google Docs, Slides, and Sheets. Summarize documents, write drafts, generate slides, and analyze spreadsheet data.',url:'https://workspace.google.com/intl/he/',video:'https://www.youtube.com/watch?v=xNcSjCkAh48',icon:'✨',iconBg:'amber',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:true,featured:true},
+  {id:4,name:'MagicSchool AI',shortHe:'80+ כלים AI מיועדים במיוחד למורים',shortEn:'80+ AI tools designed specifically for teachers',fullHe:'MagicSchool AI הוא פלטפורמה מיועדת למורים עם למעלה מ-80 כלים: יצירת מבחנים, מערכי שיעור, דפי עבודה, כתיבת משוב לתלמידים, הכנת IEP, תרגום ועוד — הכל בממשק אחד פשוט.',fullEn:'MagicSchool AI is a teacher-focused platform with 80+ tools: creating tests, lesson plans, worksheets, student feedback, IEPs, translation, and more in one simple interface.',url:'https://magicschool.ai',video:'https://www.youtube.com/watch?v=_3gpmBTAhgU',icon:'🏫',iconBg:'green',cat:0,subj:0,pricing:'free',difficulty:'easy',lang:'en',mobile:false,login:true,hasVideo:true,featured:true},
+  {id:5,name:'Khanmigo',shortHe:'עוזר AI של Khan Academy ללמידה ולהוראת מתמטיקה',shortEn:'Khan Academy AI tutor for math and learning',fullHe:'Khanmigo הוא עוזר ה-AI של Khan Academy, מיוחד לתמיכה בלמידה של מתמטיקה, מדעים ועוד. הוא מנחה תלמידים לתשובות במקום לתת אותן ישירות.',fullEn:"Khanmigo is Khan Academy's AI tutor for math, science, and more. It guides students toward answers rather than giving them outright.",url:'https://khanmigo.ai',video:'https://www.youtube.com/watch?v=rnIgnS8Susg',icon:'📐',iconBg:'green',cat:8,subj:1,pricing:'free',difficulty:'easy',lang:'en',mobile:true,login:true,hasVideo:true,featured:false},
+  {id:6,name:'Gamma',shortHe:'יצירת מצגות ואתרים מלאים מתוך טקסט בשניות',shortEn:'Create full presentations and websites from text in seconds',fullHe:'Gamma מאפשרת ליצור מצגות מקצועיות תוך שניות — מזינים נושא ומקבלים מצגת מלאה עם תכנים, עיצוב ותמונות. מתאים מאוד להכנת שיעורים מהירים.',fullEn:'Gamma creates professional presentations in seconds. Enter a topic and get a fully designed presentation with content and images. Perfect for quick lesson preparation.',url:'https://gamma.app',video:'https://www.youtube.com/watch?v=7bF7IUVfBcU',icon:'⚡',iconBg:'amber',cat:3,subj:0,pricing:'partial',difficulty:'easy',lang:'en',mobile:false,login:true,hasVideo:true,featured:false},
+  {id:7,name:'Adobe Acrobat AI',shortHe:'שאל שאלות ותקבל סיכומים ממסמכי PDF',shortEn:'Ask questions and get summaries from PDF documents',fullHe:'Adobe Acrobat AI Assistant מאפשר לדבר עם כל מסמך PDF — לשאול שאלות, לקבל סיכום, לחפש מידע ספציפי ולהוציא ציטוטים. כלי מצוין לעבודה עם מאמרים, ספרי לימוד ומקורות היסטוריים.',fullEn:'Adobe Acrobat AI Assistant lets you chat with any PDF — ask questions, get summaries, search for specific information, and extract quotes.',url:'https://acrobat.adobe.com',video:'',icon:'📄',iconBg:'coral',cat:2,subj:0,pricing:'paid',difficulty:'easy',lang:'multilang',mobile:false,login:true,hasVideo:false,featured:false},
+  {id:8,name:'Quizlet AI',shortHe:'יצירה אוטומטית של כרטיסיות, מבחנים ופעילויות חזרה',shortEn:'Auto-generate flashcards, quizzes and review activities',fullHe:'Quizlet משלבת AI ליצירה אוטומטית של כרטיסיות, שאלות ומשחקי חזרה. מורים מעלים טקסט ומקבלים ערכת לימוד שלמה.',fullEn:'Quizlet uses AI to auto-generate flashcards, quiz questions, and review games from any uploaded text.',url:'https://quizlet.com',video:'https://www.youtube.com/watch?v=6RJHfLJiulA',icon:'🃏',iconBg:'purple',cat:5,subj:0,pricing:'partial',difficulty:'easy',lang:'en',mobile:true,login:true,hasVideo:true,featured:false},
+  {id:9,name:'Speechify',shortHe:'הקראת טקסטים ומסמכים בקולות AI טבעיים',shortEn:'Text-to-speech reading of documents with natural AI voices',fullHe:'Speechify הופכת כל טקסט, PDF או מאמר להקראה קולית. מתאים מאוד לתלמידים עם דיסלקציה, לקויות קריאה, או לכל מי שמעדיף ללמוד בשמיעה.',fullEn:'Speechify converts any text, PDF, or article into audio. Great for students with dyslexia, reading difficulties, or audio learners.',url:'https://speechify.com',video:'https://www.youtube.com/watch?v=9eNRkEIDovw',icon:'🔊',iconBg:'teal',cat:7,subj:11,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:true,featured:false},
+  {id:10,name:'Otter.ai',shortHe:'תמלול שיעורים, הרצאות וישיבות באנגלית',shortEn:'Transcribe lessons, lectures and meetings in English',fullHe:'Otter.ai הוא כלי תמלול אוטומטי באנגלית המאפשר להפוך שיעורים, הרצאות וישיבות לטקסט. מתאים למורים שרוצים לתעד שיעורים ולתלמידים עם קשיי שמיעה.',fullEn:'Otter.ai automatically transcribes English audio into text — perfect for documenting lessons, recording lectures, and helping hearing-impaired students.',url:'https://otter.ai',video:'https://www.youtube.com/watch?v=9rQjjOXIHT0',icon:'🎙️',iconBg:'pink',cat:6,subj:3,pricing:'partial',difficulty:'easy',lang:'en',mobile:true,login:true,hasVideo:true,featured:false},
+  {id:11,name:'Curipod',shortHe:'בניית שיעורים אינטראקטיביים עם AI',shortEn:'Build interactive lessons with AI',fullHe:'Curipod מאפשרת לבנות שיעורים אינטראקטיביים הכוללים שאלות, סקרים, ענן מילים ושאלות פתוחות — הכל נוצר אוטומטית על ידי AI.',fullEn:'Curipod builds interactive lessons with polls, word clouds, and open questions — all automatically generated by AI for hybrid and frontal teaching.',url:'https://curipod.com',video:'https://www.youtube.com/watch?v=a9EUuZUH8-c',icon:'🎯',iconBg:'blue',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'en',mobile:true,login:true,hasVideo:true,featured:false},
+  {id:12,name:'DALL-E 3',shortHe:'יצירת תמונות מותאמות לפי תיאור טקסטואלי',shortEn:'Generate custom images from text descriptions',fullHe:'DALL-E 3 של OpenAI מאפשר ליצור תמונות בהתאמה אישית לפי תיאור טקסטואלי. מורים יכולים ליצור איורים לחומרי לימוד, רקעים לשקופיות ועוד.',fullEn:'DALL-E 3 by OpenAI generates custom images from text descriptions — create illustrations for learning materials, slide backgrounds, and worksheets.',url:'https://openai.com/dall-e-3',video:'',icon:'🖼️',iconBg:'pink',cat:4,subj:0,pricing:'partial',difficulty:'medium',lang:'multilang',mobile:false,login:true,hasVideo:false,featured:false},
+];
+
+// ─── STATE ───────────────────────────────────────────────────────
+let LANG = 'he';
+let tools = loadTools();
+let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeChip:'all' };
+let adminTab = 'add';
+let logoClicks = 0, logoTimer = null;
+
+function loadTools() {
+  try { const d = localStorage.getItem(LS_KEY); if(d) return JSON.parse(d); } catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_TOOLS));
+}
+function saveTools() { try { localStorage.setItem(LS_KEY, JSON.stringify(tools)); } catch(e){} }
+function getApiKey() { return localStorage.getItem(LS_APIKEY) || ''; }
+function saveApiKey(k) { localStorage.setItem(LS_APIKEY, k); }
+
+// ─── LANGUAGE ────────────────────────────────────────────────────
+const T = {
+  he:{ cats:CATS_HE, subjs:SUBJS_HE, all:'הכל', allTools:'כל הכלים', featured:'מומלץ', search:'חיפוש', searchPh:'חפש כלי, נושא, מקצוע...', results:'כלים', free:'חינמי', partial:'חלקית חינמי', paid:'בתשלום', hasVideo:'יש סרטון', mobile:'מובייל', details:'פרטים', open:'לכלי ↗', watch:'סרטון ↗', back:'→ חזרה', related:'כלים דומים', about:'על הכלי', techDetails:'פרטים טכניים', tags:'תגיות', pricing:'מחיר', diff:'רמת קושי', lang:'שפה', mobileField:'מובייל', loginField:'הרשמה נדרשת', videoField:'סרטון הסבר', easy:'קל', medium:'בינוני', advanced:'מתקדם', he:'עברית', en:'אנגלית', multi:'רב-לשוני', yes:'כן', no:'לא', chips:{all:'הכל',free:'חינמי',hasVideo:'יש סרטון',mobile:'מובייל',hebrew:'בעברית',beginner:'למתחילים'}, adminTitle:'ניהול המאגר', addTool:'הוסף כלי', manageTool:'ניהול כלים', settings:'הגדרות', aiName:'שם הכלי לחיפוש', aiFill:'מלא עם AI ✨', aiLoading:'מחפש מידע על הכלי...', aiDone:'המידע הוזן בהצלחה', aiErr:'שגיאה — בדוק מפתח API', manualFill:'או מלא ידנית:', toolName:'שם הכלי', shortDescHe:'תיאור קצר (עברית)', shortDescEn:'תיאור קצר (English)', fullDescHe:'הסבר מורחב (עברית)', fullDescEn:'Full description (English)', urlField:'קישור לאתר', videoUrl:'קישור לסרטון', cat:'קטגוריה', subj:'מקצוע', pricingField:'תמחור', diffField:'קושי', langField:'שפה', save:'שמור כלי', saved:'הכלי נשמר!', deleteConfirm:'למחוק את הכלי?', apiKeyLabel:'מפתח Anthropic API (לשימוש ב-AI fill)', apiKeySave:'שמור', apiKeySaved:'נשמר ✓', apiKeyNotice:'המפתח נשמר רק בדפדפן שלך (localStorage). לא נשלח לשום שרת.', passwordLabel:'שנה סיסמת ניהול', pwCurrent:'סיסמה נוכחית', pwNew:'סיסמה חדשה', pwSave:'שנה סיסמה', pwSaved:'הסיסמה שונתה!', pwErr:'סיסמה שגויה', noTools:'אין כלים עדיין', noResults:'לא נמצאו כלים', noResultsSub:'נסה חיפוש אחר' },
+  en:{ cats:CATS_EN, subjs:SUBJS_EN, all:'All', allTools:'All Tools', featured:'Featured', search:'Search', searchPh:'Search tools, topics, subjects...', results:'tools', free:'Free', partial:'Freemium', paid:'Paid', hasVideo:'Video', mobile:'Mobile', details:'Details', open:'Open tool ↗', watch:'Watch video ↗', back:'← Back', related:'Related tools', about:'About', techDetails:'Technical details', tags:'Tags', pricing:'Pricing', diff:'Difficulty', lang:'Language', mobileField:'Mobile', loginField:'Login required', videoField:'Tutorial video', easy:'Beginner', medium:'Intermediate', advanced:'Advanced', he:'Hebrew', en:'English', multi:'Multilingual', yes:'Yes', no:'No', chips:{all:'All',free:'Free',hasVideo:'Has video',mobile:'Mobile',hebrew:'Hebrew UI',beginner:'Beginner-friendly'}, adminTitle:'Manage Library', addTool:'Add Tool', manageTool:'Manage Tools', settings:'Settings', aiName:'Tool name to search', aiFill:'Fill with AI ✨', aiLoading:'Searching for tool info...', aiDone:'Info filled successfully', aiErr:'Error — check API key', manualFill:'Or fill manually:', toolName:'Tool name', shortDescHe:'תיאור קצר (עברית)', shortDescEn:'Short description (English)', fullDescHe:'הסבר מורחב (עברית)', fullDescEn:'Full description (English)', urlField:'Website URL', videoUrl:'Video URL', cat:'Category', subj:'Subject', pricingField:'Pricing', diffField:'Difficulty', langField:'Language', save:'Save Tool', saved:'Tool saved!', deleteConfirm:'Delete this tool?', apiKeyLabel:'Anthropic API key (for AI fill)', apiKeySave:'Save', apiKeySaved:'Saved ✓', apiKeyNotice:'Key stored only in your browser (localStorage). Never sent elsewhere.', passwordLabel:'Change admin password', pwCurrent:'Current password', pwNew:'New password', pwSave:'Change password', pwSaved:'Password changed!', pwErr:'Wrong password', noTools:'No tools yet', noResults:'No tools found', noResultsSub:'Try a different search' }
+};
+function t(k){ return T[LANG][k] || k; }
+
+function setLang(l){
+  LANG=l;
+  document.body.classList.toggle('ltr',l==='en');
+  document.body.classList.toggle('rtl',l==='he');
+  document.getElementById('btn-he').classList.toggle('active',l==='he');
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+  renderAll();
+}
+
+// ─── SECRET ADMIN ─────────────────────────────────────────────
+let adminPassword = localStorage.getItem('aitools_pw') || ADMIN_PASSWORD;
+
+function logoClick(){
+  logoClicks++;
+  clearTimeout(logoTimer);
+  if(logoClicks >= 5){ logoClicks=0; openPwDialog(); return; }
+  logoTimer = setTimeout(()=>{ logoClicks=0; }, 1500);
+}
+
+function openPwDialog(){
+  document.getElementById('pw-title').textContent = LANG==='he' ? 'כניסה לניהול' : 'Admin Login';
+  document.getElementById('pw-btn').textContent = LANG==='he' ? 'כניסה' : 'Enter';
+  document.getElementById('pw-err').textContent = '';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-overlay').style.display = 'flex';
+  setTimeout(()=>document.getElementById('pw-input').focus(), 50);
+}
+
+function closePw(){
+  document.getElementById('pw-overlay').style.display = 'none';
+}
+
+function checkPw(){
+  const val = document.getElementById('pw-input').value;
+  if(val === adminPassword){
+    closePw();
+    openAdmin();
+  } else {
+    document.getElementById('pw-err').textContent = t('pwErr');
+  }
+}
+
+// ─── ADMIN MODAL ──────────────────────────────────────────────
+function openAdmin(){
+  document.getElementById('admin-title-text').textContent = t('adminTitle');
+  document.getElementById('tab-add').textContent = t('addTool');
+  document.getElementById('tab-manage').textContent = t('manageTool');
+  document.getElementById('tab-settings').textContent = t('settings');
+  document.getElementById('admin-overlay').style.display = 'flex';
+  switchTab('add');
+}
+function closeAdmin(){
+  document.getElementById('admin-overlay').style.display = 'none';
+}
+function adminOverlayClick(e){
+  if(e.target === document.getElementById('admin-overlay')) closeAdmin();
+}
+function switchTab(tab){
+  adminTab = tab;
+  ['add','manage','settings'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  });
+  if(tab==='add') renderAddTab();
+  else if(tab==='manage') renderManageTab();
+  else renderSettingsTab();
+}
+
+// ─── ADD TAB ──────────────────────────────────────────────────
+function renderAddTab(){
+  const catOptions = t('cats').map((c,i)=>`<option value="${i}">${c}</option>`).join('');
+  const subjOptions = t('subjs').map((s,i)=>`<option value="${i}">${s}</option>`).join('');
+  document.getElementById('admin-body').innerHTML = `
+    <div class="notice">💡 ${LANG==='he'?'הזן את שם הכלי ולחץ "מלא עם AI" — Claude ימלא את כל השדות אוטומטית.':'Enter the tool name and click "Fill with AI" — Claude will fill all fields automatically.'}</div>
+    <div class="ai-fill-row">
+      <input class="ai-fill-input" id="ai-name-input" type="text" placeholder="${t('aiName')}" onkeydown="if(event.key==='Enter')aiFill()">
+      <button class="ai-fill-btn" id="ai-fill-btn" onclick="aiFill()">${t('aiFill')}</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+    <div class="divider"></div>
+    <div class="form-row"><label class="form-label">${t('toolName')}</label><input class="form-input" id="f-name" type="text" placeholder="ChatGPT, Canva..."></div>
+    <div class="form-row"><label class="form-label">${t('shortDescHe')}</label><input class="form-input" id="f-short-he" type="text"></div>
+    <div class="form-row"><label class="form-label">${t('shortDescEn')}</label><input class="form-input" id="f-short-en" type="text"></div>
+    <div class="form-row"><label class="form-label">${t('fullDescHe')}</label><textarea class="form-textarea" id="f-full-he" style="height:90px"></textarea></div>
+    <div class="form-row"><label class="form-label">${t('fullDescEn')}</label><textarea class="form-textarea" id="f-full-en" style="height:90px"></textarea></div>
+    <div class="form-2col">
+      <div class="form-row"><label class="form-label">${t('urlField')}</label><input class="form-input" id="f-url" type="url" placeholder="https://..."></div>
+      <div class="form-row"><label class="form-label">${t('videoUrl')}</label><input class="form-input" id="f-video" type="url" placeholder="https://youtube..."></div>
+    </div>
+    <div class="form-3col">
+      <div class="form-row"><label class="form-label">${t('cat')}</label><select class="form-select" id="f-cat">${catOptions}</select></div>
+      <div class="form-row"><label class="form-label">${t('subj')}</label><select class="form-select" id="f-subj">${subjOptions}</select></div>
+      <div class="form-row"><label class="form-label">${t('pricingField')}</label><select class="form-select" id="f-pricing"><option value="free">${t('free')}</option><option value="partial">${t('partial')}</option><option value="paid">${t('paid')}</option></select></div>
+    </div>
+    <div class="form-3col">
+      <div class="form-row"><label class="form-label">${t('diffField')}</label><select class="form-select" id="f-diff"><option value="easy">${t('easy')}</option><option value="medium">${t('medium')}</option><option value="advanced">${t('advanced')}</option></select></div>
+      <div class="form-row"><label class="form-label">${t('langField')}</label><select class="form-select" id="f-lang"><option value="multilang">${t('multi')}</option><option value="he">${t('he')}</option><option value="en">${t('en')}</option></select></div>
+      <div class="form-row"><label class="form-label">אייקון</label><input class="form-input" id="f-icon" type="text" value="🔧" style="font-size:20px;text-align:center"></div>
+    </div>
+    <button class="form-submit" id="f-submit" onclick="submitTool()">
+      <span>${t('save')}</span>
+    </button>
+    <div id="f-success" style="display:none;text-align:center;font-size:13px;font-weight:500;color:var(--teal);background:var(--teal-bg);border-radius:var(--rad);padding:10px;margin-top:10px">${t('saved')}</div>
+  `;
+}
+
+// ─── AI FILL ─────────────────────────────────────────────────
+async function aiFill(){
+  const apiKey = getApiKey();
+  const toolName = document.getElementById('ai-name-input').value.trim();
+  if(!toolName) return;
+  if(!apiKey){ setAiStatus('error', LANG==='he'?'⚠️ הוסף מפתח API תחת "הגדרות"':'⚠️ Add an API key under "Settings"'); return; }
+
+  const btn = document.getElementById('ai-fill-btn');
+  btn.disabled = true;
+  setAiStatus('loading', t('aiLoading'));
+
+  const catNames = CATS_EN.join(', ');
+  const subjNames = SUBJS_EN.join(', ');
+
+  const prompt = `You are a helpful assistant that knows about AI tools for education.
+Given the tool name "${toolName}", provide accurate information in JSON format.
+Return ONLY valid JSON, no markdown, no extra text.
+
+{
+  "name": "exact tool name",
+  "shortHe": "תיאור קצר של הכלי בעברית, עד 12 מילים",
+  "shortEn": "Short description in English, up to 12 words",
+  "fullHe": "הסבר מורחב בעברית על הכלי, 3-4 משפטים. למה הוא שימושי למורים?",
+  "fullEn": "Full description in English, 3-4 sentences. Why is it useful for teachers?",
+  "url": "official website URL",
+  "videoUrl": "a real YouTube tutorial URL for this tool, or empty string",
+  "icon": "single relevant emoji",
+  "iconBg": one of: "blue","teal","amber","coral","purple","green","pink",
+  "catEn": one of: [${catNames}],
+  "catIndex": number 0-9 matching the category,
+  "subjIndex": number 0-11 from [${subjNames}],
+  "pricing": one of: "free","partial","paid",
+  "difficulty": one of: "easy","medium","advanced",
+  "lang": one of: "he","en","multilang",
+  "mobile": true or false,
+  "login": true or false
+}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'x-api-key': apiKey, 'anthropic-version':'2023-06-01' },
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await resp.json();
+    if(data.error){ setAiStatus('error', t('aiErr')+': '+data.error.message); btn.disabled=false; return; }
+    const text = data.content[0].text.replace(/```json|```/g,'').trim();
+    const json = JSON.parse(text);
+    // fill form
+    setVal('f-name', json.name || toolName);
+    setVal('f-short-he', json.shortHe || '');
+    setVal('f-short-en', json.shortEn || '');
+    setVal('f-full-he', json.fullHe || '');
+    setVal('f-full-en', json.fullEn || '');
+    setVal('f-url', json.url || '');
+    setVal('f-video', json.videoUrl || '');
+    setVal('f-icon', json.icon || '🔧');
+    setSelectByValue('f-cat', String(json.catIndex || 0));
+    setSelectByValue('f-subj', String(json.subjIndex || 0));
+    setSelectByValue('f-pricing', json.pricing || 'partial');
+    setSelectByValue('f-diff', json.difficulty || 'easy');
+    setSelectByValue('f-lang', json.lang || 'multilang');
+    setAiStatus('done', t('aiDone') + ' ✓');
+  } catch(e) {
+    setAiStatus('error', t('aiErr'));
+  }
+  btn.disabled = false;
+}
+
+function setVal(id, val){ const el=document.getElementById(id); if(el) el.value=val; }
+function setSelectByValue(id, val){ const el=document.getElementById(id); if(el){ for(let o of el.options) if(o.value===val){ el.value=val; break; } } }
+function setAiStatus(type, msg){ const el=document.getElementById('ai-status'); if(el){ el.className='ai-status '+type; el.textContent=msg; } }
+
+// ─── SUBMIT TOOL ─────────────────────────────────────────────
+function submitTool(){
+  const name = document.getElementById('f-name').value.trim();
+  if(!name) return;
+  const catIdx = parseInt(document.getElementById('f-cat').value) || 0;
+  const newTool = {
+    id: Date.now(),
+    name,
+    shortHe: document.getElementById('f-short-he').value,
+    shortEn: document.getElementById('f-short-en').value,
+    fullHe: document.getElementById('f-full-he').value,
+    fullEn: document.getElementById('f-full-en').value,
+    url: document.getElementById('f-url').value,
+    video: document.getElementById('f-video').value,
+    icon: document.getElementById('f-icon').value || '🔧',
+    iconBg: ICON_COLORS[catIdx % ICON_COLORS.length],
+    cat: catIdx,
+    subj: parseInt(document.getElementById('f-subj').value) || 0,
+    pricing: document.getElementById('f-pricing').value,
+    difficulty: document.getElementById('f-diff').value,
+    lang: document.getElementById('f-lang').value,
+    mobile: false, login: false,
+    hasVideo: !!document.getElementById('f-video').value,
+    featured: false
+  };
+  tools.push(newTool);
+  saveTools();
+  const succ = document.getElementById('f-success');
+  succ.style.display = 'block';
+  setTimeout(()=>{ succ.style.display='none'; renderAddTab(); }, 2000);
+  renderSidebar();
+}
+
+// ─── MANAGE TAB ───────────────────────────────────────────────
+function renderManageTab(){
+  if(!tools.length){ document.getElementById('admin-body').innerHTML=`<div class="empty-state"><div class="empty-title">${t('noTools')}</div></div>`; return; }
+  const rows = tools.map(tool=>`
+    <div class="tool-row">
+      <div class="tool-row-icon">${tool.icon}</div>
+      <div class="tool-row-info">
+        <div class="tool-row-name">${tool.name}</div>
+        <div class="tool-row-cat">${LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat]}</div>
+      </div>
+      <div class="tool-row-actions">
+        <button class="btn-feature${tool.featured?' on':''}" onclick="toggleFeatured(${tool.id})">${tool.featured?'★ '+t('featured'):'☆ '+t('featured')}</button>
+        <button class="btn-delete" onclick="deleteTool(${tool.id})">${LANG==='he'?'מחק':'Delete'}</button>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('admin-body').innerHTML = `<div>${rows}</div>`;
+}
+
+function toggleFeatured(id){
+  const tool = tools.find(t=>t.id===id);
+  if(tool){ tool.featured=!tool.featured; saveTools(); renderManageTab(); renderAll(); }
+}
+
+function deleteTool(id){
+  const msg = LANG==='he'?'למחוק את הכלי?':'Delete this tool?';
+  if(!confirm(msg)) return;
+  tools = tools.filter(t=>t.id!==id);
+  saveTools();
+  renderManageTab();
+  renderAll();
+}
+
+// ─── SETTINGS TAB ─────────────────────────────────────────────
+function renderSettingsTab(){
+  document.getElementById('admin-body').innerHTML = `
+    <div class="apikey-wrap">
+      <div class="apikey-label">${t('apiKeyLabel')}</div>
+      <div class="apikey-row">
+        <input class="apikey-input" id="apikey-input" type="password" value="${getApiKey()}" placeholder="sk-ant-...">
+        <button class="apikey-save" onclick="saveApiKeyFromInput()">${t('apiKeySave')}</button>
+      </div>
+      <div class="apikey-status" id="apikey-status"></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">${t('apiKeyNotice')}</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--rad);border:0.5px solid var(--border);padding:16px">
+      <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:10px">${t('passwordLabel')}</div>
+      <div class="form-2col">
+        <div><label class="form-label">${t('pwCurrent')}</label><input class="form-input" id="pw-current" type="password"></div>
+        <div><label class="form-label">${t('pwNew')}</label><input class="form-input" id="pw-new" type="password"></div>
+      </div>
+      <button class="form-submit" style="margin-top:8px" onclick="changePassword()">${t('pwSave')}</button>
+      <div id="pw-change-msg" style="display:none;text-align:center;font-size:12px;margin-top:8px;color:var(--teal)"></div>
+    </div>
+  `;
+}
+
+function saveApiKeyFromInput(){
+  const k = document.getElementById('apikey-input').value.trim();
+  saveApiKey(k);
+  const s = document.getElementById('apikey-status');
+  s.textContent = t('apiKeySaved');
+  setTimeout(()=>{ s.textContent=''; }, 2000);
+}
+
+function changePassword(){
+  const cur = document.getElementById('pw-current').value;
+  const nw = document.getElementById('pw-new').value.trim();
+  const msg = document.getElementById('pw-change-msg');
+  if(cur !== adminPassword){ msg.style.display='block'; msg.style.color='var(--coral)'; msg.textContent=t('pwErr'); return; }
+  if(!nw){ return; }
+  adminPassword = nw;
+  localStorage.setItem('aitools_pw', nw);
+  msg.style.display='block'; msg.style.color='var(--teal)'; msg.textContent=t('pwSaved');
+  setTimeout(()=>{ msg.style.display='none'; }, 2000);
+}
+
+// ─── FILTERING ────────────────────────────────────────────────
+function getFiltered(){
+  return tools.filter(tool=>{
+    const q = state.searchQ.toLowerCase();
+    if(q){
+      const hay = (tool.name+' '+tool.shortHe+' '+tool.shortEn+' '+(LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat])).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    if(state.activeCat>=0 && tool.cat!==state.activeCat) return false;
+    if(state.activeSubj>=1 && tool.subj!==state.activeSubj && tool.subj!==0) return false;
+    if(state.activePricing!=='all' && tool.pricing!==state.activePricing) return false;
+    if(state.activeChip==='free' && tool.pricing!=='free') return false;
+    if(state.activeChip==='hasVideo' && !tool.hasVideo) return false;
+    if(state.activeChip==='mobile' && !tool.mobile) return false;
+    if(state.activeChip==='hebrew' && tool.lang!=='multilang' && tool.lang!=='he') return false;
+    if(state.activeChip==='beginner' && tool.difficulty!=='easy') return false;
+    return true;
+  });
+}
+
+// ─── RENDER ───────────────────────────────────────────────────
+function renderAll(){ renderSidebar(); renderContent(); }
+
+function renderSidebar(){
+  const catCounts = Array(CATS_HE.length).fill(0);
+  tools.forEach(t=>catCounts[t.cat]=(catCounts[t.cat]||0)+1);
+  let html = `<div class="sidebar-section"><div class="sidebar-label">${t('cats')}</div>`;
+  html += navItem(-1, t('allTools'), tools.length, state.activeCat===-1, `setCat(-1)`);
+  t('cats').forEach((c,i)=>html += navItem(i, c, catCounts[i]||0, state.activeCat===i, `setCat(${i})`));
+  html += `</div><div class="sidebar-section"><div class="sidebar-label">${t('subjs')}</div>`;
+  t('subjs').forEach((s,i)=>{
+    const cnt = i===0 ? tools.filter(x=>x.subj===0).length : tools.filter(x=>x.subj===i||x.subj===0).length;
+    html += navItem(i, s, cnt, state.activeSubj===i, `setSubj(${i})`);
+  });
+  const pc = { all:tools.length, free:tools.filter(x=>x.pricing==='free').length, partial:tools.filter(x=>x.pricing==='partial').length, paid:tools.filter(x=>x.pricing==='paid').length };
+  html += `</div><div class="sidebar-section"><div class="sidebar-label">${t('pricing')}</div>`;
+  [['all',t('allTools')],['free',t('free')],['partial',t('partial')],['paid',t('paid')]].forEach(([k,l])=>{
+    html += `<div class="nav-item${state.activePricing===k?' active':''}" onclick="setPrice('${k}')"><span class="nav-item-label">${l}</span><span class="nav-count">${pc[k]}</span></div>`;
+  });
+  html += `</div>`;
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+function navItem(idx, label, count, active, action){
+  return `<div class="nav-item${active?' active':''}" onclick="${action}"><span class="nav-item-label">${label}</span><span class="nav-count">${count}</span></div>`;
+}
+
+function setCat(i){ state.activeCat=i; renderAll(); }
+function setSubj(i){ state.activeSubj=i; renderAll(); }
+function setPrice(p){ state.activePricing=p; renderAll(); }
+
+function renderContent(){
+  const el = document.getElementById('content');
+  if(state.page==='list') el.innerHTML = renderList();
+  else if(state.page==='detail') el.innerHTML = renderDetail(state.selectedId);
+  attachListEvents();
+}
+
+function attachListEvents(){
+  const si = document.getElementById('search-input');
+  if(si){ si.addEventListener('input', e=>{ state.searchQ=e.target.value; renderContent(); const ni=document.getElementById('search-input'); if(ni){ni.focus();ni.setSelectionRange(state.searchQ.length,state.searchQ.length);} }); }
+}
+
+function pricingTag(p){ const cls=p==='free'?'t-free':p==='partial'?'t-partial':'t-paid'; const lbl=p==='free'?t('free'):p==='partial'?t('partial'):t('paid'); return `<span class="tag ${cls}">${lbl}</span>`; }
+function iconBg(bg){ return ICONS_MAP[bg]||'var(--blue-bg)'; }
+function langLabel(l){ return l==='he'?t('he'):l==='en'?t('en'):t('multi'); }
+function diffLabel(d){ return d==='easy'?t('easy'):d==='medium'?t('medium'):t('advanced'); }
+
+function renderList(){
+  const filtered = getFiltered();
+  const chips = ['all','free','hasVideo','mobile','hebrew','beginner'];
+  const chipsHtml = chips.map(k=>`<button class="chip${state.activeChip===k?' active':''}" onclick="setChip('${k}')">${T[LANG].chips[k]}</button>`).join('');
+  const catLabel = state.activeCat>=0 ? t('cats')[state.activeCat] : t('allTools');
+
+  let cards = '';
+  if(!filtered.length){
+    cards = `<div class="empty-state"><div class="empty-title">${t('noResults')}</div><div class="empty-sub">${t('noResultsSub')}</div></div>`;
+  } else {
+    cards = filtered.map(tool=>{
+      const short = LANG==='he'?tool.shortHe:tool.shortEn;
+      const cat = LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat];
+      return `<div class="card${tool.featured?' featured':''}" onclick="goDetail(${tool.id})">
+        <div class="card-top">
+          <div class="card-icon" style="background:${iconBg(tool.iconBg)}">${tool.icon}</div>
+          <div class="card-titles">
+            <div class="card-name">${tool.name}${tool.featured?` <span class="featured-badge">★ ${t('featured')}</span>`:''}</div>
+            <div class="card-short">${short}</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag t-cat">${cat}</span>
+          ${pricingTag(tool.pricing)}
+          ${tool.lang==='he'||tool.lang==='multilang'?`<span class="tag t-he">${t('he')}</span>`:''}
+        </div>
+        <div class="card-footer">
+          <div style="display:flex;gap:8px">
+            ${tool.hasVideo?`<span class="meta-badge"><span class="video-dot"></span>${t('hasVideo')}</span>`:''}
+            ${tool.mobile?`<span class="meta-badge">📱</span>`:''}
+          </div>
+          <div class="card-btns">
+            <button class="btn-xs" onclick="event.stopPropagation();goDetail(${tool.id})">${t('details')}</button>
+            <button class="btn-xs primary" onclick="event.stopPropagation();window.open('${tool.url}','_blank')">${t('open')}</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  return `
+    <div class="search-wrap">
+      <div class="search-row">
+        <input class="search-input" id="search-input" type="text" placeholder="${t('searchPh')}" value="${state.searchQ}">
+        <button class="search-btn">${t('search')}</button>
+      </div>
+      <div class="chips-row">${chipsHtml}</div>
+    </div>
+    <div class="results-header">
+      <div class="results-count">${filtered.length} ${t('results')} — ${catLabel}</div>
+    </div>
+    <div class="cards-grid">${cards}</div>
+  `;
+}
+
+function goDetail(id){ state.page='detail'; state.selectedId=id; renderContent(); window.scrollTo(0,0); }
+function goList(){ state.page='list'; renderContent(); window.scrollTo(0,0); }
+function setChip(k){ state.activeChip=k; renderContent(); }
+
+function renderDetail(id){
+  const tool = tools.find(t=>t.id===id);
+  if(!tool) return '';
+  const full = LANG==='he'?tool.fullHe:tool.fullEn;
+  const cat = LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat];
+  const subj = LANG==='he'?SUBJS_HE[tool.subj]:SUBJS_EN[tool.subj];
+  const related = tools.filter(r=>r.id!==tool.id&&(r.cat===tool.cat||r.subj===tool.subj)).slice(0,4);
+
+  return `
+    <div class="detail-page">
+      <div class="back-btn" onclick="goList()">${t('back')}</div>
+      <div class="detail-card">
+        <div class="detail-header">
+          <div class="detail-icon" style="background:${iconBg(tool.iconBg)}">${tool.icon}</div>
+          <div>
+            <div class="detail-title">${tool.name}</div>
+            <div class="detail-subtitle">${LANG==='he'?tool.shortHe:tool.shortEn}</div>
+            <div class="detail-actions">
+              <button class="btn-action primary" onclick="window.open('${tool.url}','_blank')">${t('open')}</button>
+              ${tool.hasVideo&&tool.video?`<button class="btn-action" onclick="window.open('${tool.video}','_blank')">${t('watch')}</button>`:''}
+            </div>
+          </div>
+        </div>
+        <div class="detail-sec-title">${t('about')}</div>
+        <div class="detail-desc">${full}</div>
+        <div class="detail-sec-title">${t('tags')}</div>
+        <div class="tags-wrap">
+          <span class="tag t-cat">${cat}</span>
+          <span class="tag t-subj">${subj}</span>
+          ${pricingTag(tool.pricing)}
+          <span class="tag t-he">${langLabel(tool.lang)}</span>
+        </div>
+        <div class="detail-sec-title">${t('techDetails')}</div>
+        <div class="detail-grid">
+          <div class="detail-field"><div class="detail-field-label">${t('pricing')}</div><div class="detail-field-value">${tool.pricing==='free'?t('free'):tool.pricing==='partial'?t('partial'):t('paid')}</div></div>
+          <div class="detail-field"><div class="detail-field-label">${t('diff')}</div><div class="detail-field-value">${diffLabel(tool.difficulty)}</div></div>
+          <div class="detail-field"><div class="detail-field-label">${t('lang')}</div><div class="detail-field-value">${langLabel(tool.lang)}</div></div>
+          <div class="detail-field"><div class="detail-field-label">${t('mobileField')}</div><div class="detail-field-value">${tool.mobile?t('yes'):t('no')}</div></div>
+          <div class="detail-field"><div class="detail-field-label">${t('loginField')}</div><div class="detail-field-value">${tool.login?t('yes'):t('no')}</div></div>
+          <div class="detail-field"><div class="detail-field-label">${t('videoField')}</div><div class="detail-field-value">${tool.hasVideo?t('yes'):t('no')}</div></div>
+        </div>
+      </div>
+      ${related.length?`
+      <div class="related-section">
+        <div class="related-title">${t('related')}</div>
+        <div class="related-grid">
+          ${related.map(r=>`<div class="related-card" onclick="goDetail(${r.id})"><div class="related-icon">${r.icon}</div><div class="related-name">${r.name}</div><div class="related-cat">${LANG==='he'?CATS_HE[r.cat]:CATS_EN[r.cat]}</div></div>`).join('')}
+        </div>
+      </div>`:''}
+    </div>
+  `;
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+renderAll();
+</script>
+</body>
+</html>
