@@ -318,6 +318,10 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 /* spinner */
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
+/* notes box */
+.notes-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rad-lg);padding:16px 18px;margin-bottom:16px}
+.notes-box-title{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.notes-box-text{font-size:var(--fs-sm);color:var(--text);line-height:1.85;white-space:pre-line}
 </style>
 </head>
 <body class="rtl">
@@ -405,7 +409,7 @@ const ICONS_MAP = { blue:'var(--blue-bg)', teal:'var(--teal-bg)', amber:'var(--a
 const ICON_COLORS = Object.keys(ICONS_MAP);
 
 const DEFAULT_TOOLS = [
-  {id:1,name:'PDF24 Tools',tags:['עבודה עם PDF','מיזוג מסמכים','פיצול PDF','הכנת חומר לתלמידים','המרת קבצים'],shortHe:'24 כלים חינמיים לעבודה עם PDF — מיזוג, פיצול, המרה, עריכה',shortEn:'24 free PDF tools — merge, split, convert, edit and compress',fullHe:'PDF24 הוא אוסף של 24 כלים מקוונים חינמיים לחלוטין לעבודה עם קבצי PDF. מיזוג קבצים, פיצול, דחיסה, עריכה, חתימה, המרת תמונות, הוספת סימני מים, OCR ועוד. אינו דורש התקנה ועובד ישירות בדפדפן.',fullEn:'PDF24 offers 24 fully free online PDF tools — merge, split, compress, edit, sign, convert images, add watermarks, OCR and more. No installation needed.',whyEduHe:'מורים מקבלים חומרים ממקורות שונים — קובץ מהמפקחת, דף מהספר, מסמך ממשרד החינוך. PDF24 מאפשר למזג, לחתוך ולהכין חבילת חומרים מסודרת לתלמידים בלי להתקין כלום.',whyEduEn:'Teachers receive materials from many sources. PDF24 lets you merge, crop, and package clean study materials for students — free, no installation needed.',tipHe:'גררו כמה קבצי PDF לכלי המיזוג, קבעו סדר ולחצו מיזוג — תוך 10 שניות יש חבילת חומר לימוד אחת מסודרת.',tipEn:'Drag PDFs into the merge tool, set the order, click merge — in 10 seconds you have one clean study packet.',url:'https://tools.pdf24.org/he/',video:'',guide:'',icon:'📋',iconBg:'coral',favicon:'https://tools.pdf24.org/favicon.ico',cat:2,subj:0,pricing:'free',difficulty:'easy',lang:'multilang',mobile:true,login:false,hasVideo:false,featured:true},
+  {id:1,name:'PDF24 Tools',tags:['עבודה עם PDF','מיזוג מסמכים','פיצול PDF','הכנת חומר לתלמידים','המרת קבצים'],shortHe:'24 כלים חינמיים לעבודה עם PDF — מיזוג, פיצול, המרה, עריכה',shortEn:'24 free PDF tools — merge, split, convert, edit and compress',fullHe:'PDF24 הוא אוסף של 24 כלים מקוונים חינמיים לחלוטין לעבודה עם קבצי PDF. מיזוג קבצים, פיצול, דחיסה, עריכה, חתימה, המרת תמונות, הוספת סימני מים, OCR ועוד. אינו דורש התקנה ועובד ישירות בדפדפן.',fullEn:'PDF24 offers 24 fully free online PDF tools — merge, split, compress, edit, sign, convert images, add watermarks, OCR and more. No installation needed.',notes:'יכולות ושימושים חינוכיים:\n\n📎 מיזוג קבצי PDF — איחוד דפי עבודה, מבחנים ופתרונות לקובץ אחד מסודר לתלמידים\n\n✂️ פיצול PDF — בחירת עמודים רלוונטיים מספר לימוד ושליחתם כחומר ממוקד לתלמידים\n\n🗑️ עריכת PDF (מחיקה וסידור עמודים) — הסרת עמודים לא רלוונטיים והתאמת החומר לרמת הכיתה\n\n🔄 המרת קבצים ל-PDF — הפיכת מסמכי Word או תמונות לדפי עבודה אחידים לשליחה לתלמידים\n\n📦 דחיסת PDF — הקטנת קובץ גדול כדי לשלוח בקלות בוואטסאפ או גוגל קלאסרום\n\n✏️ הוספת טקסט או חתימה — הוספת הוראות, דגשים או הערות ישירות על גבי דף עבודה\n\n🔍 OCR (זיהוי טקסט מתמונה) — הפיכת דף סרוק או צילום לקובץ שניתן לערוך ולהשתמש בו כחומר לימוד',whyEduHe:'מורים מקבלים חומרים ממקורות שונים — קובץ מהמפקחת, דף מהספר, מסמך ממשרד החינוך. PDF24 מאפשר למזג, לחתוך ולהכין חבילת חומרים מסודרת לתלמידים בלי להתקין כלום.',whyEduEn:'Teachers receive materials from many sources. PDF24 lets you merge, crop, and package clean study materials for students — free, no installation needed.',tipHe:'גררו כמה קבצי PDF לכלי המיזוג, קבעו סדר ולחצו מיזוג — תוך 10 שניות יש חבילת חומר לימוד אחת מסודרת.',tipEn:'Drag PDFs into the merge tool, set the order, click merge — in 10 seconds you have one clean study packet.',url:'https://tools.pdf24.org/he/',video:'',guide:'',icon:'📋',iconBg:'coral',favicon:'https://tools.pdf24.org/favicon.ico',cat:2,subj:0,pricing:'free',difficulty:'easy',lang:'multilang',mobile:true,login:false,hasVideo:false,featured:true},
   {id:2,name:'GuyAI',tags:['מערך שיעור','יצירת מבחנים','יצירת שאלות','הכנה לבגרות','שיעורי בית','צילום שאלה'],shortHe:'מורה פרטי AI ישראלי — פתרון תרגילים, מבחנים ואימון 24/7',shortEn:'Israeli AI private tutor — exercises, exams and practice 24/7',fullHe:'GuyAI הוא מורה פרטי AI שפותח בישראל לתלמידי תיכון ואקדמיה. כולל פתרון תרגילים בצילום, פתרון מבחנים מ-PDF, מחולל מבחנים, סיכומים, אבחון רמה ותוכנית לימוד אישית. ממשק עברי מלא.',fullEn:'GuyAI is an Israeli AI private tutor for high school and university. Photo exercise solving, PDF exam solving, quiz generator, summaries, level diagnosis, and personalized study plans.',whyEduHe:'GuyAI בנוי סביב הצרכים של התלמיד הישראלי — תוכנית הלימודים, הבגרויות ושפת הממשק. מורים יכולים לבנות מבחנים, מערכי שיעור ולעקוב אחר תלמידים — הכל בעברית.',whyEduEn:'GuyAI is built around Israeli student needs — curriculum, Bagrut exams, and Hebrew interface. Teachers can build tests, lesson plans, and track student progress.',tipHe:'השתמשו בסטודיו מערכי שיעור AI בתפריט המורים — הזינו נושא ורמת כיתה וקבלו מערך שיעור מובנה תוך דקות.',tipEn:'Use the AI Lesson Plan Studio in the teachers menu — enter a topic and grade level and get a structured lesson plan in minutes.',url:'https://www.guyai.co.il/',video:'',guide:'',icon:'🏫',iconBg:'blue',favicon:'https://www.guyai.co.il/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'he',mobile:true,login:true,hasVideo:false,featured:true},
   {id:3,name:'NotebookLM',tags:['סיכום מסמך','הכנת חומרים','שאלות על טקסט','פודקאסט מחומר לימוד','מחקר'],shortHe:'כלי AI של גוגל לניתוח מסמכים, סיכום ויצירת פודקאסט',shortEn:'Google AI tool to analyze documents, summarize and create podcasts',fullHe:'NotebookLM הוא כלי AI של גוגל שמאפשר להעלות מסמכים, מצגות, קישורים ווידאו ולשאול עליהם שאלות. הכלי מייצר סיכומים, ציר זמן, מפת נושאים, ואפילו פודקאסט שיחה בין שני קריינים.',fullEn:'NotebookLM by Google lets you upload documents, slides, links, and videos, then ask questions. It generates summaries, timelines, topic maps, and an audio podcast conversation.',whyEduHe:'מורה שצריך לסכם יחידה שלמה, לייצר שאלות מחומר קיים, או ליצור פודקאסט מרתק לתלמידים — NotebookLM עושה את זה מהחומרים שכבר יש לו.',whyEduEn:'A teacher who needs to summarize a unit, create questions from existing material, or produce an engaging podcast — NotebookLM does it all from materials you already have.',tipHe:'העלו את כל חומרי היחידה (מצגת + מאמר), לחצו "Generate Podcast" — תוך דקות יש שיחה מעניינת שאפשר לשלוח לתלמידים.',tipEn:'Upload all unit materials (slides + article), click "Generate Podcast" — in minutes you have an engaging conversation to share with students.',url:'https://notebooklm.google/',video:'',guide:'https://letsai.co.il/aitools/notebooklm/',icon:'📓',iconBg:'green',favicon:'https://notebooklm.google/favicon.ico',cat:0,subj:0,pricing:'free',difficulty:'easy',lang:'en',mobile:false,login:true,hasVideo:false,featured:true},
   {id:4,name:'Claude',tags:['מערך שיעור','הכנת חומרים','יצירת שאלות','משוב לתלמידים','עיבוד מסמכים'],shortHe:'עוזר AI מתקדם לכתיבה, ניתוח ויצירת חומרי הוראה',shortEn:'Advanced AI assistant for writing, analysis and teaching materials',fullHe:'Claude הוא עוזר AI של Anthropic, מצטיין במשימות כתיבה ארוכה, עיבוד מסמכים גדולים ויצירת חומרי הוראה מורכבים. תומך בהעלאת קבצי PDF, Word ותמונות לניתוח.',fullEn:'Claude by Anthropic excels at long-form writing, processing large documents, and creating complex teaching materials. Supports uploading PDFs, Word files and images.',whyEduHe:'כשצריך לכתוב מערך שיעור מפורט, לסכם מאמר ארוך, לכתוב גרסאות מותאמות לרמות שונות, או לנסח משוב עדין לתלמיד — Claude נותן תוצאות איכותיות גם על משימות ארוכות.',whyEduEn:'When you need a detailed lesson plan, a long article summarized, texts adapted for different levels, or carefully worded student feedback — Claude delivers quality results.',tipHe:'העלו קובץ PDF של ספר לימוד ובקשו: "חלץ את הרעיונות המרכזיים מהפרק הזה וכתוב 3 שאלות לדיון כיתתי" — חומר לשיעור תוך רגע.',tipEn:'Upload a textbook PDF and ask: "Extract the key ideas from this chapter and write 3 discussion questions" — instant lesson material.',url:'https://claude.ai/',video:'',guide:'https://letsai.co.il/aitools/claude-ai/',icon:'🤍',iconBg:'purple',favicon:'https://claude.ai/favicon.ico',cat:0,subj:0,pricing:'partial',difficulty:'easy',lang:'multilang',mobile:true,login:true,hasVideo:false,featured:true},
@@ -426,7 +430,19 @@ const DEFAULT_TOOLS = [
   {id:19,name:'Sharon Margolin — כלי AI',tags:['כלי AI לחינוך','EdTech','אוטומציה','יצירתיות','פורטפוליו כלים'],shortHe:'אוסף כלי AI לחינוך של שרון מרגולין — יועץ AI',shortEn:'Sharon Margolin AI tools collection — AI consultant for education',fullHe:'אתר הפורטפוליו של שרון מרגולין, מומחה AI המתמחה בחינוך. האתר מציג אוסף כלים ואפליקציות שפיתח בתחומי AI בחינוך, עריכת מדיה, יצירתיות ואוטומציה — עם תיאור, קישור וסרטון לכל כלי.',fullEn:'Portfolio site of Sharon Margolin, an AI expert specializing in education. Features a collection of tools and apps in EdTech, media editing, creativity, and automation — each with description, link, and video.',whyEduHe:'מורים שמחפשים כלים מוכנים ומומלצים בתחום ה-AI לחינוך ימצאו כאן אוסף מסודר עם הסברים בעברית, בנוי על ידי מומחה שמכיר את עולם ההוראה מקרוב.',whyEduEn:'Teachers looking for ready-made, recommended AI tools for education will find a curated Hebrew collection built by an expert who knows the teaching world firsthand.',tipHe:'היכנסו לאתר וסננו לפי קטגוריה "AI בחינוך (EdTech)" — תמצאו כלים ישירות רלוונטיים לכיתה עם הסברים בעברית.',tipEn:'Browse the site and filter by "AI in Education (EdTech)" — you will find classroom-relevant tools with Hebrew explanations.',url:'https://woki-portfolio--margolin.on.websim.com/',video:'',guide:'',icon:'🎯',iconBg:'purple',favicon:'https://woki-portfolio--margolin.on.websim.com/favicon.ico',cat:9,subj:0,pricing:'free',difficulty:'easy',lang:'he',mobile:true,login:false,hasVideo:false,featured:false},
 ];
 
-// ─── STATE ───────────────────────────────────────────────────────
+// ─── מדריכים פדגוגיים ────────────────────────────────────────────
+const DEFAULT_GUIDES = [
+  {id:1,title:'פודקאסט זה אתה בקול — יצירת פודקאסט עם AI',titleEn:'Create a Podcast with AI',desc:'מדריך מלא ליצירת פודקאסט חינוכי עם כלי AI — מהרעיון ועד הפרסום',url:'https://letsai.co.il/start-podcast-journey/',icon:'🎙️'},
+];
+
+// ─── אפליקציות קטנות ─────────────────────────────────────────────
+const DEFAULT_MINIAPPS = [
+  {id:1,name:'QREY — מחולל QR Codes',nameEn:'QREY — Free QR Code Generator',desc:'יצירת קודי QR חינמית ומהירה לכל קישור, טקסט או תוכן — מצוין לשיתוף חומרים עם תלמידים',url:'https://qrey.lovable.app/',icon:'⬛',color:'var(--blue-bg)'},
+  {id:2,name:'נוסחאות מתמטיקה 3 יח"ל',nameEn:'Math Formula Sheet — 3 Units',desc:'דף נוסחאות דיגיטלי אינטראקטיבי למתמטיקה 3 יחידות לימוד',url:'https://beityerach.my.canva.site/formula-3-math-units#%D7%93%D7%A3-%D7%94%D7%91%D7%99%D7%AA',icon:'📐',color:'var(--amber-bg)'},
+];
+
+let guides = JSON.parse(JSON.stringify(DEFAULT_GUIDES));
+let miniapps = JSON.parse(JSON.stringify(DEFAULT_MINIAPPS));
 let LANG = 'he';
 let tools = loadTools();
 let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeTag:'' };
@@ -791,13 +807,16 @@ function renderSidebar(){
   const catCounts = Array(CATS_HE.length).fill(0);
   tools.forEach(t=>catCounts[t.cat]=(catCounts[t.cat]||0)+1);
   let html = `<div class="sidebar-section"><div class="sidebar-label">${LANG==='he'?'קטגוריות':'Categories'}</div>`;
-  html += navItem(-1, t('allTools'), tools.length, state.activeCat===-1, `setCat(-1)`);
-  t('cats').forEach((c,i)=>html += navItem(i, c, catCounts[i]||0, state.activeCat===i, `setCat(${i})`));
+  html += navItem(-1, t('allTools'), tools.length, state.activeCat===-1 && state.page==='list', `setCat(-1)`);
+  t('cats').forEach((c,i)=>html += navItem(i, c, catCounts[i]||0, state.activeCat===i && state.page==='list', `setCat(${i})`));
   const pc = { all:tools.length, free:tools.filter(x=>x.pricing==='free').length, partial:tools.filter(x=>x.pricing==='partial').length, paid:tools.filter(x=>x.pricing==='paid').length };
   html += `</div><div class="sidebar-section"><div class="sidebar-label">${t('pricing')}</div>`;
   [['all',t('allTools')],['free',t('free')],['partial',t('partial')],['paid',t('paid')]].forEach(([k,l])=>{
-    html += `<div class="nav-item${state.activePricing===k?' active':''}" onclick="setPrice('${k}')"><span class="nav-item-label">${l}</span><span class="nav-count">${pc[k]}</span></div>`;
+    html += `<div class="nav-item${state.activePricing===k && state.page==='list'?' active':''}" onclick="setPrice('${k}')"><span class="nav-item-label">${l}</span><span class="nav-count">${pc[k]}</span></div>`;
   });
+  html += `</div><div class="sidebar-section"><div class="sidebar-label">${LANG==='he'?'מקטעים':'Sections'}</div>`;
+  html += `<div class="nav-item${state.page==='guides'?' active':''}" onclick="navigate('guides')"><span class="nav-item-label">📖 ${LANG==='he'?'מדריכים פדגוגיים':'Pedagogical Guides'}</span><span class="nav-count">${guides.length}</span></div>`;
+  html += `<div class="nav-item${state.page==='miniapps'?' active':''}" onclick="navigate('miniapps')"><span class="nav-item-label">⚡ ${LANG==='he'?'אפליקציות קטנות':'Mini Apps'}</span><span class="nav-count">${miniapps.length}</span></div>`;
   html += `</div>`;
   document.getElementById('sidebar').innerHTML = html;
   const mp = document.getElementById('mobile-sidebar-content');
@@ -808,15 +827,60 @@ function navItem(idx, label, count, active, action){
   return `<div class="nav-item${active?' active':''}" onclick="${action}"><span class="nav-item-label">${label}</span><span class="nav-count">${count}</span></div>`;
 }
 
-function setCat(i){ state.activeCat=i; closeMobileMenu(); renderAll(); }
+function setCat(i){ state.page='list'; state.activeCat=i; closeMobileMenu(); renderAll(); }
 function setSubj(i){ state.activeSubj=i; closeMobileMenu(); renderAll(); }
-function setPrice(p){ state.activePricing=p; closeMobileMenu(); renderAll(); }
+function setPrice(p){ state.page='list'; state.activePricing=p; closeMobileMenu(); renderAll(); }
+function navigate(page){ state.page=page; closeMobileMenu(); renderAll(); window.scrollTo(0,0); }
 
 function renderContent(){
   const el = document.getElementById('content');
   if(state.page==='list') el.innerHTML = renderList();
   else if(state.page==='detail') el.innerHTML = renderDetail(state.selectedId);
+  else if(state.page==='guides') el.innerHTML = renderGuides();
+  else if(state.page==='miniapps') el.innerHTML = renderMiniapps();
   attachListEvents();
+}
+
+function renderGuides(){
+  const isHe = LANG==='he';
+  let cards = '';
+  if(!guides.length){
+    cards = `<div class="empty-state"><div style="font-size:48px;margin-bottom:12px">📖</div><div class="empty-title">${isHe?'מדריכים יתווספו בקרוב':'Guides coming soon'}</div></div>`;
+  } else {
+    cards = `<div class="cards-grid">${guides.map(g=>`
+      <div class="card" onclick="window.open('${g.url}','_blank')">
+        <div class="card-top">
+          <div class="card-icon" style="background:var(--blue-bg);font-size:22px">${g.icon||'📖'}</div>
+          <div class="card-titles"><div class="card-name">${isHe?g.title:g.titleEn||g.title}</div><div class="card-short">${g.desc||''}</div></div>
+        </div>
+        <div class="card-footer"><span></span><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${g.url}','_blank')">${isHe?'לקריאה ↗':'Read ↗'}</button></div>
+      </div>`).join('')}</div>`;
+  }
+  return `<div style="max-width:860px">
+    <div style="margin-bottom:20px"><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">📖 ${isHe?'מדריכים פדגוגיים':'Pedagogical Guides'}</h1>
+    <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'מדריכים ורעיונות לשילוב בינה מלאכותית בהוראה':'Guides and ideas for integrating AI in teaching'}</p></div>
+    ${cards}</div>`;
+}
+
+function renderMiniapps(){
+  const isHe = LANG==='he';
+  let cards = '';
+  if(!miniapps.length){
+    cards = `<div class="empty-state"><div style="font-size:48px;margin-bottom:12px">⚡</div><div class="empty-title">${isHe?'אפליקציות יתווספו בקרוב':'Apps coming soon'}</div></div>`;
+  } else {
+    cards = `<div class="cards-grid">${miniapps.map(a=>`
+      <div class="card" onclick="window.open('${a.url}','_blank')">
+        <div class="card-top">
+          <div class="card-icon" style="background:${a.color||'var(--amber-bg)'};font-size:22px">${a.icon||'⚡'}</div>
+          <div class="card-titles"><div class="card-name">${isHe?a.name:a.nameEn||a.name}</div><div class="card-short">${a.desc||''}</div></div>
+        </div>
+        <div class="card-footer"><span></span><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${a.url}','_blank')">${isHe?'לאפליקציה ↗':'Open ↗'}</button></div>
+      </div>`).join('')}</div>`;
+  }
+  return `<div style="max-width:860px">
+    <div style="margin-bottom:20px"><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">⚡ ${isHe?'אפליקציות קטנות':'Mini Apps'}</h1>
+    <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'אפליקציות ייעודיות שבניתי למטרות חינוכיות ספציפיות':'Purpose-built mini apps for specific educational needs'}</p></div>
+    ${cards}</div>`;
 }
 
 function attachListEvents(){
@@ -885,6 +949,36 @@ function renderList(){
     }).join('');
   }
 
+  // חיפוש גלובלי — מדריכים ואפליקציות
+  let globalExtras = '';
+  if(state.searchQ.trim()){
+    const q = state.searchQ.toLowerCase();
+    const matchedGuides = guides.filter(g=>(g.title+' '+(g.titleEn||'')+' '+(g.desc||'')).toLowerCase().includes(q));
+    const matchedApps = miniapps.filter(a=>(a.name+' '+(a.nameEn||'')+' '+(a.desc||'')).toLowerCase().includes(q));
+    if(matchedGuides.length||matchedApps.length){
+      globalExtras = `<div style="margin-top:24px">`;
+      if(matchedGuides.length){
+        globalExtras += `<div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📖 ${LANG==='he'?'מדריכים':'Guides'}</div>
+        <div class="cards-grid">${matchedGuides.map(g=>`
+          <div class="card" onclick="window.open('${g.url}','_blank')">
+            <div class="card-top"><div class="card-icon" style="background:var(--blue-bg);font-size:22px">${g.icon||'📖'}</div>
+            <div class="card-titles"><div class="card-name">${LANG==='he'?g.title:g.titleEn||g.title}</div><div class="card-short">${g.desc||''}</div></div></div>
+            <div class="card-footer"><span></span><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${g.url}','_blank')">${LANG==='he'?'לקריאה ↗':'Read ↗'}</button></div>
+          </div>`).join('')}</div>`;
+      }
+      if(matchedApps.length){
+        globalExtras += `<div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 10px">⚡ ${LANG==='he'?'אפליקציות קטנות':'Mini Apps'}</div>
+        <div class="cards-grid">${matchedApps.map(a=>`
+          <div class="card" onclick="window.open('${a.url}','_blank')">
+            <div class="card-top"><div class="card-icon" style="background:${a.color||'var(--amber-bg)'};font-size:22px">${a.icon||'⚡'}</div>
+            <div class="card-titles"><div class="card-name">${LANG==='he'?a.name:a.nameEn||a.name}</div><div class="card-short">${a.desc||''}</div></div></div>
+            <div class="card-footer"><span></span><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${a.url}','_blank')">${LANG==='he'?'לאפליקציה ↗':'Open ↗'}</button></div>
+          </div>`).join('')}</div>`;
+      }
+      globalExtras += `</div>`;
+    }
+  }
+
   return `
     <div class="search-wrap">
       <div class="search-row">
@@ -897,6 +991,7 @@ function renderList(){
       <div class="results-count">${filtered.length} ${t('results')}${state.activeTag?' — '+state.activeTag:' — '+catLabel}</div>
     </div>
     <div class="cards-grid">${cards}</div>
+    ${globalExtras}
   `;
 }
 
@@ -919,6 +1014,7 @@ function renderDetail(id){
   const subj = LANG==='he'?SUBJS_HE[tool.subj]:SUBJS_EN[tool.subj];
   const whyEdu = LANG==='he'?(tool.whyEduHe||''):(tool.whyEduEn||'');
   const tip = LANG==='he'?(tool.tipHe||''):(tool.tipEn||'');
+  const notes = tool.notes||'';
   const related = tools.filter(r=>r.id!==tool.id&&(r.cat===tool.cat||r.subj===tool.subj)).slice(0,4);
 
   const techPills = [
@@ -960,6 +1056,12 @@ function renderDetail(id){
         <div class="tip-box">
           <div class="tip-label">${LANG==='he'?'טיפ פדגוגי':'Pedagogical tip'}</div>
           <div class="tip-text">${tip}</div>
+        </div>`:''}
+
+        ${notes?`
+        <div class="notes-box">
+          <div class="notes-box-title">📋 ${LANG==='he'?'פרטים נוספים':'Additional notes'}</div>
+          <div class="notes-box-text">${notes}</div>
         </div>`:''}
 
         <div class="detail-sec-title">${t('tags')}</div>
