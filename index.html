@@ -1190,8 +1190,15 @@ const DEFAULT_MINIAPPS = [
   {id:2,name:'נוסחאות מתמטיקה 3 יח"ל',nameEn:'Math Formula Sheet — 3 Units',desc:'דף נוסחאות דיגיטלי אינטראקטיבי למתמטיקה 3 יחידות לימוד',url:'https://beityerach.my.canva.site/formula-3-math-units#%D7%93%D7%A3-%D7%94%D7%91%D7%99%D7%AA',icon:'📐',color:'var(--amber-bg)'},
 ];
 
+// ─── מדריכי יוטיוב ───────────────────────────────────────────────
+const DEFAULT_YOUTUBE_GUIDES = [
+  {id:1,title:'GuyAI — סרטון הדרכה',titleEn:'GuyAI — Tutorial Video',desc:'סרטון יוטיוב להיכרות עם GuyAI והשימושים החינוכיים שלו',url:'https://youtu.be/TSiKVJaV2Do?si=zblF9ssQeQYnzaBt',icon:'🎬'},
+  {id:2,title:'Gamma — סרטון הדרכה',titleEn:'Gamma — Tutorial Video',desc:'סרטון יוטיוב שמדגים איך ליצור מצגות עם Gamma',url:'https://www.youtube.com/watch?v=7bF7IUVfBcU',icon:'🎬'},
+];
+
 let guides = JSON.parse(JSON.stringify(DEFAULT_GUIDES));
 let miniapps = JSON.parse(JSON.stringify(DEFAULT_MINIAPPS));
+let youtubeGuides = JSON.parse(JSON.stringify(DEFAULT_YOUTUBE_GUIDES));
 let LANG = localStorage.getItem('aitools_lang') || 'he';
 let tools = loadTools();
 let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeTag:'' };
@@ -1709,6 +1716,7 @@ function renderSidebar(){
   html += `</div><div class="sidebar-section"><div class="sidebar-label">${LANG==='he'?'מקטעים':'Sections'}</div>`;
   html += `<div class="nav-item${state.page==='guides'?' active':''}" onclick="navigate('guides')"><span class="nav-item-label">📖 ${LANG==='he'?'מדריכים פדגוגיים':'Pedagogical Guides'}</span><span class="nav-count">${guides.length}</span></div>`;
   html += `<div class="nav-item${state.page==='miniapps'?' active':''}" onclick="navigate('miniapps')"><span class="nav-item-label">⚡ ${LANG==='he'?'אפליקציות קטנות':'Mini Apps'}</span><span class="nav-count">${miniapps.length}</span></div>`;
+  html += `<div class="nav-item${state.page==='youtube-guides'?' active':''}" onclick="navigate('youtube-guides')"><span class="nav-item-label">🎬 ${LANG==='he'?'מדריכי יוטיוב':'YouTube Guides'}</span><span class="nav-count">${youtubeGuides.length}</span></div>`;
   html += `</div>`;
   document.getElementById('sidebar').innerHTML = html;
   const mp = document.getElementById('mobile-sidebar-content');
@@ -1730,6 +1738,7 @@ function renderContent(){
   else if(state.page==='detail') el.innerHTML = renderDetail(state.selectedId);
   else if(state.page==='guides') el.innerHTML = renderGuides();
   else if(state.page==='miniapps') el.innerHTML = renderMiniapps();
+  else if(state.page==='youtube-guides') el.innerHTML = renderYoutubeGuides();
   attachListEvents();
 }
 
@@ -1772,6 +1781,27 @@ function renderMiniapps(){
   return `<div style="max-width:860px">
     <div style="margin-bottom:20px"><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">⚡ ${isHe?'אפליקציות קטנות':'Mini Apps'}</h1>
     <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'אפליקציות ייעודיות שבניתי למטרות חינוכיות ספציפיות':'Purpose-built mini apps for specific educational needs'}</p></div>
+    ${cards}</div>`;
+}
+
+function renderYoutubeGuides(){
+  const isHe = LANG==='he';
+  let cards = '';
+  if(!youtubeGuides.length){
+    cards = `<div class="empty-state"><div style="font-size:48px;margin-bottom:12px">🎬</div><div class="empty-title">${isHe?'סרטונים יתווספו בקרוב':'Videos coming soon'}</div></div>`;
+  } else {
+    cards = `<div class="cards-grid">${youtubeGuides.map(v=>`
+      <div class="card" onclick="window.open('${v.url}','_blank')">
+        <div class="card-top">
+          <div class="card-icon" style="background:var(--coral-bg);font-size:22px">${v.icon||'🎬'}</div>
+          <div class="card-titles"><div class="card-name">${isHe?v.title:v.titleEn||v.title}</div><div class="card-short">${v.desc||''}</div></div>
+        </div>
+        <div class="card-footer"><span></span><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${v.url}','_blank')">${isHe?'לסרטון':'Watch'}</button></div>
+      </div>`).join('')}</div>`;
+  }
+  return `<div style="max-width:860px">
+    <div style="margin-bottom:20px"><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">🎬 ${isHe?'מדריכי יוטיוב':'YouTube Guides'}</h1>
+    <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'סרטוני הדרכה שימושיים מיוטיוב על כלים, הוראה ובינה מלאכותית':'Useful YouTube tutorial videos about tools, teaching, and AI'}</p></div>
     ${cards}</div>`;
 }
 
