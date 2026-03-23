@@ -1194,7 +1194,6 @@ let guides = JSON.parse(JSON.stringify(DEFAULT_GUIDES));
 let miniapps = JSON.parse(JSON.stringify(DEFAULT_MINIAPPS));
 let LANG = localStorage.getItem('aitools_lang') || 'he';
 let tools = loadTools();
-normalizeToolLocales();
 let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeTag:'' };
 let adminTab = 'add';
 let logoClicks = 0, logoTimer = null;
@@ -1273,6 +1272,8 @@ function normalizeToolLocales(){
     notesEn: tool.notesEn || NOTES_EN_BY_ID[tool.id] || ''
   }));
 }
+normalizeToolLocales();
+
 function updateStaticText(){
   document.documentElement.lang = LANG;
   document.documentElement.dir = LANG === 'he' ? 'rtl' : 'ltr';
