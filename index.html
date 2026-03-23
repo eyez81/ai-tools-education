@@ -355,8 +355,8 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer-credit">נבנה על ידי <strong>אייל עזרא / Eyal Ezra</strong></div>
-  <div class="footer-copy">© 2025 מאגר כלי AI לחינוך · כל הזכויות שמורות</div>
+  <div class="footer-credit" id="footer-credit">נבנה על ידי <strong>אייל עזרא / Eyal Ezra</strong></div>
+  <div class="footer-copy" id="footer-copy">© 2025 מאגר כלי AI לחינוך · כל הזכויות שמורות</div>
 </footer>
 
 <!-- MOBILE SIDEBAR OVERLAY -->
@@ -1192,8 +1192,9 @@ const DEFAULT_MINIAPPS = [
 
 let guides = JSON.parse(JSON.stringify(DEFAULT_GUIDES));
 let miniapps = JSON.parse(JSON.stringify(DEFAULT_MINIAPPS));
-let LANG = 'he';
+let LANG = localStorage.getItem('aitools_lang') || 'he';
 let tools = loadTools();
+normalizeToolLocales();
 let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeTag:'' };
 let adminTab = 'add';
 let logoClicks = 0, logoTimer = null;
@@ -1206,6 +1207,91 @@ function saveTools() { try { localStorage.setItem(LS_KEY, JSON.stringify(tools))
 function getApiKey() { return localStorage.getItem(LS_APIKEY) || ''; }
 function saveApiKey(k) { localStorage.setItem(LS_APIKEY, k); }
 
+const LS_LANG = 'aitools_lang';
+
+const TAG_HE_EN = {
+  'עבודה עם PDF':'PDF work','עריכת PDF':'PDF editing','מיזוג קבצים':'Merge files','פיצול קבצים':'Split files','הכנת דפי עבודה':'Worksheet creation','הכנת חוברת לתלמידים':'Student booklet creation','המרת קבצים':'File conversion','דחיסת קבצים':'File compression',
+  'מערך שיעור':'Lesson plans','יצירת מבחנים':'Test creation','יצירת שאלות':'Question generation','הכנה לבגרות':'Bagrut prep','שיעורי בית':'Homework','צילום שאלה':'Question from photo','פתרון תרגילים':'Exercise solving','למידה מותאמת אישית':'Personalized learning','מעקב תלמידים':'Student tracking',
+  'סיכום מסמכים':'Document summaries','הכנת חומרים':'Material preparation','שאלות על טקסט':'Questions on text','למידה מבוססת מסמכים':'Document-based learning','יצירת פודקאסט':'Podcast creation','יצירת מצגות':'Presentation creation','מפות חשיבה':'Mind maps','כרטיסיות לימוד':'Flashcards','מחקר':'Research','ניתוח מקורות':'Source analysis',
+  'משוב לתלמידים':'Student feedback','עיבוד מסמכים':'Document processing','כתיבה אקדמית':'Academic writing','סיכום טקסטים':'Text summaries','הבדלה':'Differentiation','בדיקת עבודות':'Assignment review',
+  'דפי עבודה':'Worksheets','רובריקה':'Rubrics','הוראה מותאמת':'Personalized instruction','כלים למורים':'Teacher tools','תכנון שיעור':'Lesson planning',
+  'חיפוש מידע':'Information search','מקורות אמינים':'Reliable sources','עבודת חקר':'Research projects','הכנת עבודות':'Assignment prep','שאלות עיון':'Open-ended questions','בדיקת עובדות':'Fact checking','סיכום מידע':'Information summaries','חקר עצמאי':'Independent inquiry',
+  'הסבר מושגים':'Concept explanations','תרגול':'Practice','כתיבה':'Writing','פתרון בעיות':'Problem solving',
+  'Google Workspace':'Google Workspace','Gemini Gems':'Gemini Gems','קנבס':'Canvas','יצירת תמונות':'Image generation','עבודה עם דרייב':'Drive integration',
+  'בניית כלים':'Tool building','פרומפטים מתקדמים':'Advanced prompting','התאמה אישית':'Customization','מודלי שפה':'Language models','הוראות מערכת':'System instructions','פיתוח כלי AI':'AI tool development','טקסט לקול':'Text to speech','יצירת אודיו':'Audio generation',
+  'עריכת תמונות':'Image editing','אינפוגרפיקות':'Infographics','איורים לחומר לימוד':'Learning illustrations','ויזואלים למצגות':'Presentation visuals','עיצוב כרזות':'Poster design','תמונות עם טקסט':'Images with text','תוכן חזותי':'Visual content',
+  'מצגת לשיעור':'Lesson presentation','סיכום נושא':'Topic summary','הכנה מהירה':'Fast preparation','עיצוב מצגות':'Presentation design','הצגת מידע':'Presenting information','storytelling':'Storytelling',
+  'עיצוב גרפי':'Graphic design','עלון הורים':'Parent newsletter','כרזה לכיתה':'Classroom poster','תבניות מוכנות':'Ready-made templates','יצירת תוכן':'Content creation','חומרי הוראה':'Teaching materials',
+  'תמלול':'Transcription','תמלול עברית':'Hebrew transcription','הקלטת שיעור':'Lesson recording','נגישות':'Accessibility','סיכום שיעור':'Lesson summary','הפקת טקסט מאודיו':'Text from audio',
+  'הקראת טקסט':'Text reading','קריינות':'Voiceover','פודקאסט':'Podcast','הקראת מבחן':'Exam read-aloud',
+  'יצירת מוזיקה':'Music generation','יצירת שירים':'Song creation','שירי לימוד':'Learning songs','פעילות כיתתית':'Classroom activity','למידה חווייתית':'Experiential learning','יצירתיות':'Creativity',
+  'בניית אפליקציות':'App building','כלים דיגיטליים':'Digital tools','פרויקטים לתלמידים':'Student projects','ללא קוד':'No-code','יצירת כלים':'Tool creation','יזמות':'Entrepreneurship','פיתוח חשיבה':'Thinking skills','עברית':'Hebrew',
+  'בניית אתרים':'Website building','סימולציות':'Simulations','כלים אינטראקטיביים':'Interactive tools','יצירת אפליקציות':'App creation','הדמיות':'Visualizations',
+  'בוטים':'Bots','כלים חינוכיים':'Educational tools','אפליקציות AI':'AI apps','מאגר כלים':'Tool library','שימושים חינוכיים':'Educational use cases','יצירה עם AI':'Building with AI',
+  'סיכום רעיונות':'Idea summaries','ארגון מידע':'Information organization','המחשה':'Visualization','חשיבה ויזואלית':'Visual thinking'
+};
+
+const NOTES_EN_BY_ID = {
+  1:`Technical capabilities and educational uses:\n\n📎 Merge PDF files — combine worksheets, tests, and solutions into one organized file for students\n\n✂️ Split PDF — select only the relevant pages from a textbook and share focused material\n\n🗑️ Edit PDF (remove and reorder pages) — delete unnecessary pages and adapt the material to the class level\n\n🔄 Convert files to PDF — turn Word documents or images into uniform worksheets\n\n📦 Compress PDF — reduce large files so they are easy to send in WhatsApp or Google Classroom\n\n✏️ Add text or signature — add instructions, highlights, or notes directly onto a worksheet\n\n🔍 OCR — turn scanned pages or photos into editable text for learning materials`,
+  2:`Technical capabilities and educational uses:\n\n📷 Solve exercises from an image — students photograph a question and get an explained solution\n\n🧠 Educational use: lets students check themselves after an independent attempt\n\n📝 Create tests — build tests by topic and grade level\n\n🧠 Educational use: teachers can generate practice for a test or Bagrut in minutes\n\n❓ Generate questions — create questions at knowledge, understanding, and application levels\n\n🧠 Educational use: supports differentiated practice for mixed-level classes\n\n📊 Level diagnosis — identify student level and suggest a learning plan\n\n🧠 Educational use: personalizes practice based on student gaps\n\n📚 Solve PDF exams — upload a test and receive solutions\n\n🧠 Educational use: turns past exams into guided practice material\n\n🧾 Create lesson plans — build a structured lesson by topic and level\n\n🧠 Educational use: saves prep time and helps the teacher focus on instruction\n\n📈 Track students — analyze performance and progress\n\n🧠 Educational use: helps identify gaps and follow student growth`,
+  3:`Technical capabilities and educational uses:\n\n📄 Summarize documents — produce a clear summary from study material\n\n🧠 Educational use: create a student-friendly summary or review sheet\n\n❓ Ask questions about text — get answers directly from uploaded material\n\n🧠 Educational use: students can test understanding and ask follow-up questions\n\n🧩 Identify key ideas — extract central points from a document\n\n🧠 Educational use: helps the teacher focus the lesson on the essentials\n\n🕒 Build a timeline — organize information chronologically\n\n🧠 Educational use: especially useful in history, literature, and scientific processes\n\n🎧 Create a podcast — generate a two-host audio conversation from the material\n\n🧠 Educational use: supports learning by listening, especially for students who struggle with reading\n\n🧠 Create mind maps — organize the topic visually\n\n🧠 Educational use: helps students see connections and remember better\n\n🃏 Create flashcards — turn material into study cards\n\n🧠 Educational use: supports active review before a test\n\n📊 Suggest a presentation structure — build slide flow from a topic\n\n🧠 Educational use: fast lesson presentation prep or student assignment support\n\n🔍 Compare and analyze sources — understand links between multiple documents\n\n🧠 Educational use: develops critical thinking and source comparison\n\n📚 Work with multiple files — combine slides, articles, and videos into one knowledge base\n\n🧠 Educational use: build a full learning unit from several sources`,
+  4:`Technical capabilities and educational uses:\n\n📄 Analyze long documents — understand complex texts quickly\n\n🧠 Educational use: helps teachers review assignments or articles and extract the essentials\n\n✍️ Write and expand text — produce high-quality content\n\n🧠 Educational use: create lesson plans, explanations, and information sheets\n\n📝 Rewrite text — adapt content to different levels\n\n🧠 Educational use: simplify academic text or differentiate it for mixed classes\n\n❓ Generate questions — build comprehension, analysis, and thinking questions\n\n🧠 Educational use: create practice tailored to the topic being taught\n\n📊 Give student feedback — analyze work and generate comments\n\n🧠 Educational use: saves teacher time while producing detailed feedback\n\n📚 Summarize texts — extract key ideas from articles or chapters\n\n🧠 Educational use: prepare study summaries or revision sheets\n\n🧩 Differentiation — create multiple versions of the same content\n\n🧠 Educational use: adapt material to different levels in one class\n\n📎 Work with files (PDF, Word, images) — analyze content directly from uploaded files\n\n🧠 Educational use: upload study materials or student work and review them directly`,
+  5:`Technical capabilities and educational uses:\n\n📝 Create worksheets — build practice sheets by topic and level\n\n🧠 Educational use: prepare fast classwork or homework\n\n📚 Create lesson plans — build a structured lesson with goals and steps\n\n🧠 Educational use: saves prep time and provides a clear teaching structure\n\n🧪 Create tests — build quizzes and assessments\n\n🧠 Educational use: fast test creation aligned with the topic\n\n📊 Create rubrics — generate assessment criteria\n\n🧠 Educational use: supports clear and consistent grading\n\n💬 Write student feedback — draft responses and comments\n\n🧠 Educational use: provide encouraging feedback quickly\n\n🧩 Differentiation — adapt content to different levels\n\n🧠 Educational use: create varied versions of the same material\n\n📖 Simplify texts — lower the reading level of a text\n\n🧠 Educational use: helps struggling students understand complex material\n\n🎯 Plan lesson objectives — define clear learning goals\n\n🧠 Educational use: supports focused, measurable lessons`,
+  6:`Technical capabilities and educational uses:\n\n🔍 Search with sources — receive answers together with source links\n\n🧠 Educational use: teaches students to support answers with reliable sources\n\n📄 Summarize information — produce a summary from multiple sources\n\n🧠 Educational use: helps students grasp a broad topic as part of research\n\n❓ Follow-up questions — suggest deeper questions to continue exploring\n\n🧠 Educational use: encourages inquiry beyond the first answer\n\n🌐 Real-time search — retrieve up-to-date information from the web\n\n🧠 Educational use: useful for current events and research assignments\n\n📚 Source display — direct links to articles and sites\n\n🧠 Educational use: lets students verify and cross-check information\n\n🧠 Compare information — combine perspectives from multiple sources\n\n🧠 Educational use: develops critical thinking and source comparison\n\n📝 Draft a full answer — write a structured response to a question\n\n🧠 Educational use: serves as a model for writing thoughtful responses`,
+  7:`Technical capabilities and educational uses:\n\n❓ Generate questions — build questions at different levels\n\n🧠 Educational use: create varied practice by thinking level\n\n📄 Create worksheets — build topic-based practice sheets\n\n🧠 Educational use: prepare student materials quickly\n\n📚 Write lesson plans — generate a full lesson structure\n\n🧠 Educational use: supports clear lesson planning with steps and goals\n\n🧠 Explain concepts — simplify complex ideas\n\n🧠 Educational use: adapt explanations to student level\n\n🧩 Differentiation — adapt content to multiple levels\n\n🧠 Educational use: create different versions of one task\n\n💬 Draft feedback — write comments for students\n\n🧠 Educational use: provide clear and encouraging feedback\n\n📝 Writing and summaries — produce texts and summaries\n\n🧠 Educational use: create learning materials and revision sheets\n\n📎 Work with files — analyze images, PDFs, and texts\n\n🧠 Educational use: upload questions or student work and analyze them`,
+  8:`Technical capabilities and educational uses:\n\n🧩 Canvas — create a visual workspace with ideas, content, and structure\n\n🧠 Educational use: plan lessons, classroom activities, or group work visually\n\n📊 Create presentations — build a full presentation from a topic\n\n🧠 Educational use: prepare a lesson quickly or create student tasks\n\n🧠 Gemini Gems — create a custom AI assistant\n\n🧠 Educational use: build a subject-specific or class-specific assistant\n\n🧾 Work inside Google Docs — write, summarize, and edit documents\n\n🧠 Educational use: turn learning material into a clear explanation sheet\n\n📁 Connect to Google Drive — work with existing files\n\n🧠 Educational use: use existing teaching materials without re-uploading\n\n🎨 Generate images — create illustrations from descriptions\n\n🧠 Educational use: create visuals for presentations and worksheets\n\n📄 Summarize documents — extract the key ideas\n\n🧠 Educational use: prepare a revision summary or short study sheet\n\n🔗 Connect to NotebookLM — extend document-based work\n\n🧠 Educational use: move from quick help to deeper source-based learning`,
+  9:`Technical capabilities and educational uses:\n\n⚙️ System instructions — control how the AI behaves\n\n🧠 Educational use: create a fixed assistant for a subject, language, and teaching style\n\n📄 Work with files and documents — analyze large study materials\n\n🧠 Educational use: upload articles, worksheets, and study texts for deeper work\n\n❓ Generate custom questions — create practice with precise requirements\n\n🧠 Educational use: build questions by thinking level, topic, or test format\n\n🧩 Build reusable tools — create assistants and repeated workflows\n\n🧠 Educational use: build a class tool such as an exercise generator or answer checker\n\n📊 Control output format — define how answers should look\n\n🧠 Educational use: receive structured outputs suitable for teaching or assessment\n\n🔁 Reuse the same workflow — keep consistent settings over time\n\n🧠 Educational use: saves time and keeps lessons consistent\n\n🔊 Text-to-speech — generate audio from text\n\n🧠 Educational use: create narrated explanations, audio summaries, and listening materials\n\n🧠 Advanced Gemini usage — work beyond normal chat\n\n🧠 Educational use: build custom teaching, practice, and learning solutions`,
+  10:`Technical capabilities and educational uses:\n\n🖼️ Generate images from text — create a new image from a prompt\n\n🧠 Educational use: produce a precise illustration for a topic without long searching\n\n✏️ Edit images in natural language — change parts of an existing image\n\n🧠 Educational use: adapt a picture for class by changing background, adding an element, or highlighting a part\n\n📊 Create infographics — turn information into a visual layout\n\n🧠 Educational use: make visual summaries or explain scientific and historical processes\n\n🔤 Add text inside images — generate posters or concept cards with text\n\n🧠 Educational use: create classroom posters, vocabulary cards, or title slides\n\n🧍 Keep a character consistent — generate the same character in different scenes\n\n🧠 Educational use: build a recurring character for a game, comic, or card series\n\n🧪 Combine multiple images — blend visual elements into one new image\n\n🧠 Educational use: create a custom visual from several sources\n\n🎨 Create different styles — photo, illustration, painting, comic, and more\n\n🧠 Educational use: match the style to the age group or lesson tone`,
+  11:`Technical capabilities and educational uses:\n\n📊 Full presentation creation — build slides, content, and design\n\n🧠 Educational use: prepare a complete lesson presentation in minutes\n\n🧾 Lesson structure generation — split a topic into slides and sections\n\n🧠 Educational use: organize information clearly for students\n\n🎨 Automatic design — get a polished presentation layout\n\n🧠 Educational use: even teachers without design skills get strong results\n\n📝 Slide content generation — write text for slides by topic\n\n🧠 Educational use: saves writing and prep time\n\n📄 Export to PDF or PowerPoint — save and share the deck\n\n🧠 Educational use: present in class or share with students\n\n🧠 Level-based adaptation — generate content for a specific age or grade\n\n🧠 Educational use: match the presentation to the learners\n\n📚 Turn a topic summary into a deck — convert complex material into slides\n\n🧠 Educational use: present a topic clearly and concisely`,
+  12:`Technical capabilities and educational uses:\n\n🎨 Create presentations — build designed presentations from templates\n\n🧠 Educational use: prepare a clear and engaging visual lesson\n\n📄 Create worksheets — use ready-made practice templates\n\n🧠 Educational use: prepare student materials in an organized way\n\n📰 Create parent newsletters — design updates for families\n\n🧠 Educational use: support clear and polished communication with parents\n\n🖼️ Design posters — create classroom visuals and displays\n\n🧠 Educational use: visually explain a topic or classroom message\n\n✍️ Magic Write — generate text with AI\n\n🧠 Educational use: draft summaries, explanations, and copy quickly\n\n🧩 Use templates — start from ready-made layouts\n\n🧠 Educational use: save time and get polished results without designing from scratch\n\n📸 Use images, icons, and graphic elements — build visual materials\n\n🧠 Educational use: illustrate concepts and make learning more engaging\n\n📄 Export and share — download or share files\n\n🧠 Educational use: send to students, present in class, or print`,
+  13:`Technical capabilities and educational uses:\n\n🎙️ Transcribe audio — turn a sound file into text\n\n🧠 Educational use: create a written lesson summary from a recording\n\n🎥 Transcribe video — extract text from a video\n\n🧠 Educational use: turn Zoom lessons or videos into reading material\n\n📄 Editable text output — receive a transcript you can edit\n\n🧠 Educational use: adjust the summary to the desired level and format\n\n🧠 Hebrew support — transcription optimized for spoken Hebrew\n\n🧠 Educational use: often more accurate than general-purpose tools\n\n📚 Turn speech into study material — convert spoken explanations into text\n\n🧠 Educational use: create summary pages or revision material\n\n♿ Accessibility — convert speech to text for students\n\n🧠 Educational use: supports students who struggle with listening or need written material`,
+  14:`Technical capabilities and educational uses:\n\n🔊 Text to speech — turn text into audio\n\n🧠 Educational use: create spoken explanations or read aloud study materials\n\n📝 Exam read-aloud — convert a written test into audio\n\n🧠 Educational use: provide accommodations for students who need reading support\n\n🎙️ Different voices — choose from multiple voices and styles\n\n🧠 Educational use: match the voice to the content or age group\n\n🎧 Audio file export — save as MP3\n\n🧠 Educational use: add to a presentation, a video, or send directly to students\n\n🎥 Voiceover for videos — create narration for explainer videos\n\n🧠 Educational use: produce learning videos without recording yourself\n\n📚 Create podcasts — turn text into spoken content\n\n🧠 Educational use: support learning by listening before a test\n\n♿ Accessibility — convert text to audio\n\n🧠 Educational use: support students who struggle with reading\n\n✍️ Control speaking style — adjust pace, tone, and intonation\n\n🧠 Educational use: create a clear and pleasant instructional voice`,
+  15:`Technical capabilities and educational uses:\n\n🎵 Create a song from text — generate a full song from a prompt\n\n🧠 Educational use: turn a learning topic into something easy to remember\n\n🎤 Write lyrics — create the words of the song\n\n🧠 Educational use: present educational content creatively\n\n🎶 Choose a musical style — pop, rap, rock, and more\n\n🧠 Educational use: match the style to student interests and age\n\n🎧 Full audio creation — produce melody and performance\n\n🧠 Educational use: use the song in class or for review\n\n🧠 Include key terms in the song — embed learning content in lyrics\n\n🧠 Educational use: strengthen memory through music\n\n🎬 Classroom use — play the song during the lesson\n\n🧠 Educational use: make an engaging lesson opener or summary\n\n🎯 Experiential learning — turn content into an experience\n\n🧠 Educational use: increase engagement and motivation`,
+  16:`Technical capabilities and educational uses:\n\n🛠️ Build apps — create a working tool from a description\n\n🧠 Educational use: build custom classroom tools\n\n🌐 Build websites — create a site or web page\n\n🧠 Educational use: create content pages, activities, or project sites\n\n📊 Create calculation tools — calculators, forms, and more\n\n🧠 Educational use: build practice, checking, or assessment tools\n\n🎮 Create games — build simple games\n\n🧠 Educational use: enable game-based learning\n\n🧠 No-code workflow — everything is done through AI conversation\n\n🧠 Educational use: lets teachers create without technical skills\n\n🧩 Personalization — build a tool for a precise need\n\n🧠 Educational use: solve a specific classroom problem\n\n🚀 Student projects — build apps as assignments\n\n🧠 Educational use: develop creative thinking, entrepreneurship, and teamwork`,
+  17:`Technical capabilities and educational uses:\n\n🛠️ Build apps — create a working tool from a description in Hebrew\n\n🧠 Educational use: create classroom solutions without coding\n\n🌐 Build systems — forms, trackers, and management tools\n\n🧠 Educational use: manage students, assignments, or classroom data\n\n📊 Create calculation tools — calculators and analysis utilities\n\n🧠 Educational use: build practice, checking, or evaluation tools\n\n🧠 Work in Hebrew — full Hebrew understanding and prompting\n\n🧠 Educational use: easier for teachers and students in Israel\n\n🧩 Personalization — build a tool for an exact need\n\n🧠 Educational use: solve specific classroom challenges\n\n🚀 Student projects — create apps as part of a task\n\n🧠 Educational use: develop thinking, creativity, and entrepreneurship\n\n🔗 Connect data — work with information and databases\n\n🧠 Educational use: build tracking or data-analysis systems`,
+  18:`Technical capabilities and educational uses:\n\n🌐 Build websites — create a web page from a description\n\n🧠 Educational use: create content pages, explanations, or activities\n\n🧩 Create simulations — model processes interactively\n\n🧠 Educational use: make abstract concepts concrete and interactive\n\n🎮 Create interactive tools — games or mini apps\n\n🧠 Educational use: support learning through experimentation, not just explanation\n\n🧠 No-code workflow — everything happens through AI conversation\n\n🧠 Educational use: allows any teacher to create without technical skills\n\n📊 Control variables — change parameters in real time\n\n🧠 Educational use: understand the effect of changing variables\n\n🧪 Experiment and explore — learn through direct interaction\n\n🧠 Educational use: develops inquiry-based thinking\n\n🚀 Create classroom projects — build tools for class use\n\n🧠 Educational use: create a customized learning environment`,
+  19:`Technical capabilities and educational uses:\n\n🤖 Collection of bots — many different tools in one place\n\n🧠 Educational use: exposes teachers to a variety of AI use cases\n\n🛠️ Ready-to-use tools — working apps and bots\n\n🧠 Educational use: immediate classroom use without building anything\n\n💡 Idea inspiration — real examples of AI products\n\n🧠 Educational use: develops creative thinking for teachers and students\n\n🧩 Understanding AI potential — moving from answers to creation\n\n🧠 Educational use: changes the perception of AI from helper to builder\n\n🚀 Project ideas for students — examples for classroom tasks\n\n🧠 Educational use: inspire student-made tool projects\n\n🔗 Connection to WebSim and Gemini — see how similar tools were built\n\n🧠 Educational use: learn how to create similar solutions for your class`,
+  20:`Technical capabilities and educational uses:\n\n🧩 Turn text into a diagram — create a visual structure\n\n🧠 Educational use: illustrate relationships between concepts\n\n🧠 Create mind maps — organize ideas visually\n\n🧠 Educational use: present a topic clearly and in an easy-to-understand way\n\n📊 Create infographics — arrange information graphically\n\n🧠 Educational use: summarize a topic or process in a compact visual form\n\n📝 Organize ideas — turn rough text into a clear structure\n\n🧠 Educational use: support lesson planning and material organization\n\n🎯 Highlight key points — surface the main ideas\n\n🧠 Educational use: helps students understand what matters most\n\n📚 Classroom presentation — use the output as presentation content\n\n🧠 Educational use: turn explanations into a visual board\n\n🧠 Visual thinking — move from text to image\n\n🧠 Educational use: especially helpful for visual learners`
+};
+
+function getToolTags(tool, lang = LANG){
+  if(lang === 'he') return tool.tagsHe || tool.tags || [];
+  if(tool.tagsEn) return tool.tagsEn;
+  const base = tool.tagsHe || tool.tags || [];
+  return base.map(tag => TAG_HE_EN[tag] || tag);
+}
+function getToolNotes(tool, lang = LANG){
+  if(lang === 'he') return tool.notesHe || tool.notes || '';
+  return tool.notesEn || NOTES_EN_BY_ID[tool.id] || '';
+}
+function normalizeToolLocales(){
+  tools = tools.map(tool => ({
+    ...tool,
+    tagsHe: tool.tagsHe || tool.tags || [],
+    tagsEn: tool.tagsEn || getToolTags(tool,'en'),
+    notesHe: tool.notesHe || tool.notes || '',
+    notesEn: tool.notesEn || NOTES_EN_BY_ID[tool.id] || ''
+  }));
+}
+function updateStaticText(){
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = LANG === 'he' ? 'rtl' : 'ltr';
+  document.body.dir = LANG === 'he' ? 'rtl' : 'ltr';
+  document.title = LANG === 'he' ? 'מאגר כלי AI לחינוך' : 'AI Tools for Education';
+  const appName = document.getElementById('app-name');
+  if(appName) appName.innerHTML = LANG === 'he' ? 'מאגר כלי AI לחינוך <span>/ AI Tools for Education</span>' : 'AI Tools for Education <span>/ מאגר כלי AI לחינוך</span>';
+  const credit = document.getElementById('footer-credit');
+  if(credit) credit.innerHTML = LANG === 'he' ? 'נבנה על ידי <strong>אייל עזרא / Eyal Ezra</strong>' : 'Built by <strong>Eyal Ezra / אייל עזרא</strong>';
+  const copy = document.getElementById('footer-copy');
+  if(copy) copy.textContent = LANG === 'he' ? '© 2025 מאגר כלי AI לחינוך · כל הזכויות שמורות' : '© 2025 AI Tools for Education · All rights reserved';
+  const fDown = document.getElementById('font-down-btn');
+  const fUp = document.getElementById('font-up-btn');
+  const theme = document.getElementById('theme-btn');
+  if(fDown) fDown.title = LANG === 'he' ? 'הקטן טקסט' : 'Decrease text size';
+  if(fUp) fUp.title = LANG === 'he' ? 'הגדל טקסט' : 'Increase text size';
+  if(theme) theme.title = LANG === 'he' ? 'שנה מצב תצוגה' : 'Change appearance';
+}
+
 // ─── LANGUAGE ────────────────────────────────────────────────────
 const T = {
   he:{ cats:CATS_HE, subjs:SUBJS_HE, all:'הכל', allTools:'כל הכלים', featured:'מומלץ', search:'חיפוש', searchPh:'חפש כלי, נושא, מקצוע...', results:'כלים', free:'חינמי', partial:'חלקית חינמי', paid:'בתשלום', hasVideo:'יש סרטון', mobile:'מובייל', details:'פרטים', open:'לכלי ↗', watch:'סרטון ↗', back:'→ חזרה', related:'כלים דומים', about:'על הכלי', techDetails:'פרטים טכניים', tags:'תגיות', pricing:'מחיר', diff:'רמת קושי', lang:'שפה', mobileField:'מובייל', loginField:'הרשמה נדרשת', videoField:'סרטון הסבר', easy:'קל', medium:'בינוני', advanced:'מתקדם', he:'עברית', en:'אנגלית', multi:'רב-לשוני', yes:'כן', no:'לא', chips:{all:'הכל',free:'חינמי',hasVideo:'יש סרטון',mobile:'מובייל',hebrew:'בעברית',beginner:'למתחילים'}, adminTitle:'ניהול המאגר', addTool:'הוסף כלי', manageTool:'ניהול כלים', settings:'הגדרות', aiName:'שם הכלי לחיפוש', aiFill:'מלא עם AI ✨', aiLoading:'מחפש מידע על הכלי...', aiDone:'המידע הוזן בהצלחה', aiErr:'שגיאה — בדוק מפתח API', manualFill:'או מלא ידנית:', toolName:'שם הכלי', shortDescHe:'תיאור קצר (עברית)', shortDescEn:'תיאור קצר (English)', fullDescHe:'הסבר מורחב (עברית)', fullDescEn:'Full description (English)', urlField:'קישור לאתר', videoUrl:'קישור לסרטון', cat:'קטגוריה', subj:'מקצוע', pricingField:'תמחור', diffField:'קושי', langField:'שפה', save:'שמור כלי', saved:'הכלי נשמר!', deleteConfirm:'למחוק את הכלי?', apiKeyLabel:'מפתח Anthropic API (לשימוש ב-AI fill)', apiKeySave:'שמור', apiKeySaved:'נשמר ✓', apiKeyNotice:'המפתח נשמר רק בדפדפן שלך (localStorage). לא נשלח לשום שרת.', passwordLabel:'שנה סיסמת ניהול', pwCurrent:'סיסמה נוכחית', pwNew:'סיסמה חדשה', pwSave:'שנה סיסמה', pwSaved:'הסיסמה שונתה!', pwErr:'סיסמה שגויה', noTools:'אין כלים עדיין', noResults:'לא נמצאו כלים', noResultsSub:'נסה חיפוש אחר' },
@@ -1214,11 +1300,14 @@ const T = {
 function t(k){ return T[LANG][k] || k; }
 
 function setLang(l){
-  LANG=l;
+  LANG = l;
+  localStorage.setItem(LS_LANG, l);
+  state.activeTag = '';
   document.body.classList.toggle('ltr',l==='en');
   document.body.classList.toggle('rtl',l==='he');
   document.getElementById('btn-he').classList.toggle('active',l==='he');
   document.getElementById('btn-en').classList.toggle('active',l==='en');
+  updateStaticText();
   renderAll();
 }
 
@@ -1545,23 +1634,23 @@ function getFiltered(){
   let list = tools.filter(tool=>{
     if(state.activeCat>=0 && tool.cat!==state.activeCat) return false;
     if(state.activePricing!=='all' && tool.pricing!==state.activePricing) return false;
-    if(state.activeTag && !(tool.tags||[]).includes(state.activeTag)) return false;
+    if(state.activeTag && !getToolTags(tool).includes(state.activeTag)) return false;
     if(!q) return true;
     const hay_name  = (tool.name).toLowerCase();
-    const hay_tags  = (tool.tags||[]).join(' ').toLowerCase();
+    const hay_tags  = (getToolTags(tool,'he').concat(getToolTags(tool,'en'))).join(' ').toLowerCase();
     const hay_cat   = (LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat]).toLowerCase();
     const hay_short = (tool.shortHe+' '+tool.shortEn).toLowerCase();
-    const hay_full  = (tool.fullHe+' '+tool.fullEn+' '+(tool.whyEduHe||'')+' '+(tool.whyEduEn||'')+' '+(tool.tipHe||'')+' '+(tool.tipEn||'')+' '+(tool.notes||'')).toLowerCase();
+    const hay_full  = (tool.fullHe+' '+tool.fullEn+' '+(tool.whyEduHe||'')+' '+(tool.whyEduEn||'')+' '+(tool.tipHe||'')+' '+(tool.tipEn||'')+' '+(getToolNotes(tool,'he')||'')+' '+(getToolNotes(tool,'en')||'')).toLowerCase();
     return scoreItem(hay_name,hay_tags,hay_cat,hay_short,hay_full,q) > 0;
   });
 
   if(q){
     list = list.map(tool=>{
       const hay_name  = tool.name.toLowerCase();
-      const hay_tags  = (tool.tags||[]).join(' ').toLowerCase();
+      const hay_tags  = (getToolTags(tool,'he').concat(getToolTags(tool,'en'))).join(' ').toLowerCase();
       const hay_cat   = (LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat]).toLowerCase();
       const hay_short = (tool.shortHe+' '+tool.shortEn).toLowerCase();
-      const hay_full  = (tool.fullHe+' '+tool.fullEn+' '+(tool.whyEduHe||'')+' '+(tool.whyEduEn||'')+' '+(tool.tipHe||'')+' '+(tool.tipEn||'')+' '+(tool.notes||'')).toLowerCase();
+      const hay_full  = (tool.fullHe+' '+tool.fullEn+' '+(tool.whyEduHe||'')+' '+(tool.whyEduEn||'')+' '+(tool.tipHe||'')+' '+(tool.tipEn||'')+' '+(getToolNotes(tool,'he')||'')+' '+(getToolNotes(tool,'en')||'')).toLowerCase();
       return { tool, score: scoreItem(hay_name,hay_tags,hay_cat,hay_short,hay_full,q) };
     }).sort((a,b)=>b.score-a.score).map(x=>x.tool);
   }
@@ -1598,7 +1687,7 @@ function getGlobalExtras(q){
 
 function getAllTags(){
   const counts = {};
-  tools.forEach(tool=>(tool.tags||[]).forEach(tag=>{ counts[tag]=(counts[tag]||0)+1; }));
+  tools.forEach(tool=>getToolTags(tool).forEach(tag=>{ counts[tag]=(counts[tag]||0)+1; }));
   return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([tag,count])=>({tag,count}));
 }
 
@@ -1722,7 +1811,7 @@ function renderList(){
       const iconContent = tool.favicon
         ? `<img src="${tool.favicon}" onerror="this.style.display='none';this.nextSibling.style.display='block'" alt=""><span style="display:none">${tool.icon}</span>`
         : tool.icon;
-      const usageTags = (tool.tags||[]).slice(0,3).map(tag=>
+      const usageTags = getToolTags(tool).slice(0,3).map(tag=>
         `<span class="tag t-use" style="cursor:pointer" onclick="event.stopPropagation();setTag('${tag.replace(/'/g,"\\'")}' )">${tag}</span>`
       ).join('');
       return `<div class="card${tool.featured?' featured':''}" onclick="goDetail(${tool.id})">
@@ -1814,7 +1903,7 @@ function renderDetail(id){
   const subj = LANG==='he'?SUBJS_HE[tool.subj]:SUBJS_EN[tool.subj];
   const whyEdu = LANG==='he'?(tool.whyEduHe||''):(tool.whyEduEn||'');
   const tip = LANG==='he'?(tool.tipHe||''):(tool.tipEn||'');
-  const notes = tool.notes||'';
+  const notes = getToolNotes(tool);
   const related = tools.filter(r=>r.id!==tool.id&&(r.cat===tool.cat||r.subj===tool.subj)).slice(0,4);
 
   const techPills = [
