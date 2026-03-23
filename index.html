@@ -893,20 +893,73 @@ function changePassword(){
 }
 
 // ─── FILTERING ────────────────────────────────────────────────
+// ─── SEARCH ENGINE ────────────────────────────────────────────
+// מחשב ציון רלוונטיות לכלי: שם=100, תגיות=60, קטגוריה=40, מלל קצר=30, מלל מלא+notes=10
+function scoreItem(hay_name, hay_tags, hay_cat, hay_short, hay_full, q){
+  let score = 0;
+  if(hay_name.includes(q)) score += (hay_name.startsWith(q) ? 200 : 100);
+  if(hay_tags.includes(q)) score += 60;
+  if(hay_cat.includes(q)) score += 40;
+  if(hay_short.includes(q)) score += 30;
+  if(hay_full.includes(q)) score += 10;
+  return score;
+}
+
 function getFiltered(){
-  return tools.filter(tool=>{
-    const q = state.searchQ.toLowerCase();
-    if(q){
-      const tagStr = (tool.tags||[]).join(' ');
-      const hay = (tool.name+' '+tool.shortHe+' '+tool.shortEn+' '+tagStr+' '+(LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat])).toLowerCase();
-      if(!hay.includes(q)) return false;
-    }
+  const q = state.searchQ.toLowerCase().trim();
+
+  let list = tools.filter(tool=>{
     if(state.activeCat>=0 && tool.cat!==state.activeCat) return false;
-    if(state.activeSubj>=1 && tool.subj!==state.activeSubj && tool.subj!==0) return false;
     if(state.activePricing!=='all' && tool.pricing!==state.activePricing) return false;
     if(state.activeTag && !(tool.tags||[]).includes(state.activeTag)) return false;
-    return true;
+    if(!q) return true;
+    const hay_name  = (tool.name).toLowerCase();
+    const hay_tags  = (tool.tags||[]).join(' ').toLowerCase();
+    const hay_cat   = (LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat]).toLowerCase();
+    const hay_short = (tool.shortHe+' '+tool.shortEn).toLowerCase();
+    const hay_full  = (tool.fullHe+' '+tool.fullEn+' '+(tool.whyEduHe||'')+' '+(tool.whyEduEn||'')+' '+(tool.tipHe||'')+' '+(tool.tipEn||'')+' '+(tool.notes||'')).toLowerCase();
+    return scoreItem(hay_name,hay_tags,hay_cat,hay_short,hay_full,q) > 0;
   });
+
+  if(q){
+    list = list.map(tool=>{
+      const hay_name  = tool.name.toLowerCase();
+      const hay_tags  = (tool.tags||[]).join(' ').toLowerCase();
+      const hay_cat   = (LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat]).toLowerCase();
+      const hay_short = (tool.shortHe+' '+tool.shortEn).toLowerCase();
+      const hay_full  = (tool.fullHe+' '+tool.fullEn+' '+(tool.whyEduHe||'')+' '+(tool.whyEduEn||'')+' '+(tool.tipHe||'')+' '+(tool.tipEn||'')+' '+(tool.notes||'')).toLowerCase();
+      return { tool, score: scoreItem(hay_name,hay_tags,hay_cat,hay_short,hay_full,q) };
+    }).sort((a,b)=>b.score-a.score).map(x=>x.tool);
+  }
+
+  return list;
+}
+
+// חיפוש גלובלי במדריכים ואפליקציות — עם ציון
+function getGlobalExtras(q){
+  if(!q) return {guides:[], miniapps:[]};
+  const ql = q.toLowerCase();
+
+  const scoreG = g => {
+    let s = 0;
+    if(g.title.toLowerCase().includes(ql)) s += 100;
+    if((g.titleEn||'').toLowerCase().includes(ql)) s += 80;
+    if((g.desc||'').toLowerCase().includes(ql)) s += 30;
+    if((g.notes||'').toLowerCase().includes(ql)) s += 10;
+    return s;
+  };
+  const scoreA = a => {
+    let s = 0;
+    if(a.name.toLowerCase().includes(ql)) s += 100;
+    if((a.nameEn||'').toLowerCase().includes(ql)) s += 80;
+    if((a.desc||'').toLowerCase().includes(ql)) s += 30;
+    if((a.notes||'').toLowerCase().includes(ql)) s += 10;
+    return s;
+  };
+
+  const mg = guides.map(g=>({g,s:scoreG(g)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.g);
+  const ma = miniapps.map(a=>({a,s:scoreA(a)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.a);
+  return {guides:mg, miniapps:ma};
 }
 
 function getAllTags(){
@@ -1067,9 +1120,7 @@ function renderList(){
   // חיפוש גלובלי — מדריכים ואפליקציות
   let globalExtras = '';
   if(state.searchQ.trim()){
-    const q = state.searchQ.toLowerCase();
-    const matchedGuides = guides.filter(g=>(g.title+' '+(g.titleEn||'')+' '+(g.desc||'')).toLowerCase().includes(q));
-    const matchedApps = miniapps.filter(a=>(a.name+' '+(a.nameEn||'')+' '+(a.desc||'')).toLowerCase().includes(q));
+    const {guides: matchedGuides, miniapps: matchedApps} = getGlobalExtras(state.searchQ);
     if(matchedGuides.length||matchedApps.length){
       globalExtras = `<div style="margin-top:24px">`;
       if(matchedGuides.length){
