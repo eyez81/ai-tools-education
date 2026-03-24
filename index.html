@@ -72,9 +72,10 @@ body.rtl{direction:rtl}
 .ctrl-sep{width:0.5px;height:20px;background:var(--border2);margin:0 2px}
 
 /* ── LAYOUT ── */
-.main{display:flex;flex:1}
-.sidebar{width:220px;flex-shrink:0;background:var(--surface);border-inline-end:0.5px solid var(--border);padding:20px 12px;overflow-y:auto;position:sticky;top:56px;height:calc(100vh - 56px)}
-.content{flex:1;padding:24px;min-width:0;overflow-y:auto}
+.main{display:flex;flex:1;justify-content:center}
+.main-inner{display:flex;flex:1;max-width:1280px;width:100%}
+.sidebar{width:240px;flex-shrink:0;background:var(--surface);border-inline-end:0.5px solid var(--border);padding:20px 12px;overflow-y:auto;position:sticky;top:56px;height:calc(100vh - 56px)}
+.content{flex:1;padding:24px;min-width:0;overflow-y:auto;max-width:100%}
 
 /* ── SIDEBAR ── */
 .sidebar-section{margin-bottom:24px}
@@ -87,7 +88,41 @@ body.rtl{direction:rtl}
 .nav-count{font-size:11px;color:var(--text3);background:var(--surface2);padding:1px 7px;border-radius:99px}
 .nav-item.active .nav-count{background:rgba(24,95,165,.12);color:var(--blue-text)}
 
-/* ── SEARCH ── */
+/* ── SIDEBAR SEARCH ── */
+.sidebar-search-wrap{position:relative;margin-bottom:16px}
+.sidebar-search-input{width:100%;height:34px;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);padding:0 32px 0 10px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.sidebar-search-input:focus{border-color:var(--blue);background:var(--surface)}
+.sidebar-search-icon{position:absolute;top:50%;inset-inline-end:10px;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+
+/* ── MULTI-CAT nav ── */
+.nav-item.multi-active{background:var(--blue-bg)}
+.nav-item.multi-active .nav-item-label{color:var(--blue-text);font-weight:500}
+
+/* ── LIST / GRID TOGGLE ── */
+.view-toggle{display:flex;gap:4px;align-items:center}
+.view-btn{width:28px;height:28px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:all .15s}
+.view-btn.active{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue)}
+
+/* ── LIST VIEW CARDS ── */
+.cards-list{display:flex;flex-direction:column;gap:8px}
+.card-list-item{background:var(--surface);border-radius:var(--rad-lg);border:0.5px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:box-shadow .15s,border-color .15s}
+.card-list-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.07);border-color:var(--border2)}
+.card-list-item.featured{border-color:var(--blue)}
+.card-list-icon{width:36px;height:36px;border-radius:var(--rad);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden}
+.card-list-icon img{width:24px;height:24px;object-fit:contain}
+.card-list-body{flex:1;min-width:0}
+.card-list-name{font-size:14px;font-weight:600;color:var(--text)}
+.card-list-short{font-size:12px;color:var(--text2);margin-top:2px}
+.card-list-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.card-list-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
+
+/* ── CARD TAGS POPOVER ── */
+.tags-popover-wrap{position:relative;display:inline-block}
+.tags-popover-btn{font-size:11px;padding:2px 8px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text3);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.tags-popover-btn:hover{background:var(--surface);color:var(--text2)}
+.tags-popover{position:absolute;top:calc(100% + 6px);inset-inline-start:0;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--rad-lg);padding:10px;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.12);min-width:180px;display:flex;flex-wrap:wrap;gap:5px}
+.tags-popover .tag.t-use{cursor:pointer}
+.tags-popover .tag.t-use:hover{background:var(--blue-bg);color:var(--blue-text)}
 .search-wrap{background:var(--surface);border-radius:var(--rad-lg);border:0.5px solid var(--border);padding:16px 20px;margin-bottom:16px}
 .search-row{display:flex;gap:8px;margin-bottom:12px}
 .search-input{flex:1;height:42px;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);padding:0 14px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
@@ -349,8 +384,10 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 </div>
 
 <div class="main">
-  <div class="sidebar" id="sidebar"></div>
-  <div class="content" id="content"></div>
+  <div class="main-inner">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="content" id="content"></div>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -1201,7 +1238,7 @@ let miniapps = JSON.parse(JSON.stringify(DEFAULT_MINIAPPS));
 let youtubeGuides = JSON.parse(JSON.stringify(DEFAULT_YOUTUBE_GUIDES));
 let LANG = localStorage.getItem('aitools_lang') || 'he';
 let tools = loadTools();
-let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeSubj:-1, activePricing:'all', activeTag:'' };
+let state = { page:'list', selectedId:null, searchQ:'', activeCat:-1, activeCats:[], activeSubj:-1, activePricing:'all', activeTag:'', viewMode:'grid', sidebarSearch:'' };
 let adminTab = 'add';
 let logoClicks = 0, logoTimer = null;
 
@@ -1638,9 +1675,13 @@ function scoreItem(hay_name, hay_tags, hay_cat, hay_short, hay_full, q){
 
 function getFiltered(){
   const q = state.searchQ.toLowerCase().trim();
+  const isMulti = state.activeCats.length > 0;
 
   let list = tools.filter(tool=>{
-    if(state.activeCat>=0 && tool.cat!==state.activeCat) return false;
+    // קטגוריה: single או multi
+    if(isMulti){
+      if(!state.activeCats.includes(tool.cat)) return false;
+    } else if(state.activeCat>=0 && tool.cat!==state.activeCat) return false;
     if(state.activePricing!=='all' && tool.pricing!==state.activePricing) return false;
     if(state.activeTag && !getToolTags(tool).includes(state.activeTag)) return false;
     if(!q) return true;
@@ -1705,9 +1746,42 @@ function renderAll(){ renderSidebar(); renderContent(); }
 function renderSidebar(){
   const catCounts = Array(CATS_HE.length).fill(0);
   tools.forEach(t=>catCounts[t.cat]=(catCounts[t.cat]||0)+1);
-  let html = `<div class="sidebar-section"><div class="sidebar-label">${LANG==='he'?'קטגוריות':'Categories'}</div>`;
-  html += navItem(-1, t('allTools'), tools.length, state.activeCat===-1 && state.page==='list', `setCat(-1)`);
-  t('cats').forEach((c,i)=>html += navItem(i, c, catCounts[i]||0, state.activeCat===i && state.page==='list', `setCat(${i})`));
+
+  // סינון לפי חיפוש בסיידבר
+  const sq = (state.sidebarSearch||'').toLowerCase().trim();
+  const allCats = t('cats');
+  const filteredCatIdxs = allCats.map((c,i)=>({c,i})).filter(({c})=>!sq||c.toLowerCase().includes(sq)||CATS_EN[allCats.indexOf(c)].toLowerCase().includes(sq));
+
+  const isMulti = state.activeCats.length > 0;
+
+  let html = `
+  <div class="sidebar-search-wrap">
+    <input class="sidebar-search-input" type="text" placeholder="${LANG==='he'?'חפש קטגוריה...':'Search category...'}" value="${state.sidebarSearch||''}" oninput="setSidebarSearch(this.value)" id="sidebar-search-input">
+    <span class="sidebar-search-icon">🔍</span>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-label">${LANG==='he'?'סינון לפי קטגוריה':'Filter by Category'}</div>`;
+
+  // "כל הכלים" — מציג רק אם אין חיפוש
+  if(!sq){
+    const allActive = !isMulti && state.activeCat===-1 && state.page==='list';
+    html += `<div class="nav-item${allActive?' active':''}" onclick="setCat(-1)"><span class="nav-item-label">${t('allTools')}</span><span class="nav-count">${tools.length}</span></div>`;
+  }
+
+  filteredCatIdxs.forEach(({c,i})=>{
+    const isActive = isMulti
+      ? state.activeCats.includes(i)
+      : (state.activeCat===i && state.page==='list');
+    html += `<div class="nav-item${isActive?' multi-active':''}" onclick="toggleCat(${i})" style="cursor:pointer">
+      <span class="nav-item-label">${c}</span>
+      <span class="nav-count">${catCounts[i]||0}</span>
+    </div>`;
+  });
+
+  // כפתור ניקוי בחירה מרובה
+  if(isMulti){
+    html += `<div style="padding:6px 10px"><button onclick="setCat(-1)" style="font-size:11px;color:var(--text3);background:transparent;border:0.5px solid var(--border2);border-radius:99px;padding:2px 10px;cursor:pointer;font-family:inherit">${LANG==='he'?'✕ נקה סינון':'✕ Clear filter'}</button></div>`;
+  }
+
   const pc = { all:tools.length, free:tools.filter(x=>x.pricing==='free').length, partial:tools.filter(x=>x.pricing==='partial').length, paid:tools.filter(x=>x.pricing==='paid').length };
   html += `</div><div class="sidebar-section"><div class="sidebar-label">${t('pricing')}</div>`;
   [['all',t('allTools')],['free',t('free')],['partial',t('partial')],['paid',t('paid')]].forEach(([k,l])=>{
@@ -1727,7 +1801,24 @@ function navItem(idx, label, count, active, action){
   return `<div class="nav-item${active?' active':''}" onclick="${action}"><span class="nav-item-label">${label}</span><span class="nav-count">${count}</span></div>`;
 }
 
-function setCat(i){ state.page='list'; state.activeCat=i; closeMobileMenu(); renderAll(); }
+function setCat(i){ state.page='list'; state.activeCat=i; state.activeCats=[]; closeMobileMenu(); renderAll(); }
+function toggleCat(i){
+  state.page='list';
+  const idx = state.activeCats.indexOf(i);
+  if(idx === -1){ state.activeCats.push(i); } else { state.activeCats.splice(idx,1); }
+  // אם אין קטגוריות נבחרות, חזור ל-all
+  if(state.activeCats.length === 0){ state.activeCat=-1; } else { state.activeCat=-2; /* multi-mode */ }
+  closeMobileMenu(); renderAll();
+}
+function setSidebarSearch(val){
+  state.sidebarSearch = val;
+  renderSidebar();
+  // שמור פוקוס בשדה החיפוש
+  setTimeout(()=>{
+    const el = document.getElementById('sidebar-search-input');
+    if(el){ el.focus(); el.setSelectionRange(val.length,val.length); }
+  }, 10);
+}
 function setSubj(i){ state.activeSubj=i; closeMobileMenu(); renderAll(); }
 function setPrice(p){ state.page='list'; state.activePricing=p; closeMobileMenu(); renderAll(); }
 function navigate(page){ state.page=page; closeMobileMenu(); renderAll(); window.scrollTo(0,0); }
@@ -1818,7 +1909,10 @@ function diffLabel(d){ return d==='easy'?t('easy'):d==='medium'?t('medium'):t('a
 function renderList(){
   const filtered = getFiltered();
   const allTags = getAllTags();
-  const catLabel = state.activeCat>=0 ? t('cats')[state.activeCat] : t('allTools');
+  const isMulti = state.activeCats.length > 0;
+  const catLabel = isMulti
+    ? state.activeCats.map(i=>t('cats')[i]).join(' + ')
+    : (state.activeCat>=0 ? t('cats')[state.activeCat] : t('allTools'));
 
   // תגיות שימוש — מכווץ עם כפתור הרחבה
   const expandLabel = LANG==='he' ? 'כל התגיות ▾' : 'All tags ▾';
@@ -1832,19 +1926,70 @@ function renderList(){
       <button id="tags-toggle-btn" onclick="toggleTagsExpand()" style="flex-shrink:0;padding:4px 10px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap;margin-top:2px">${expandLabel}</button>
     </div>`;
 
+  // כפתורי תצוגה grid/list
+  const viewToggle = `
+    <div class="view-toggle">
+      <button class="view-btn${state.viewMode==='grid'?' active':''}" onclick="setViewMode('grid')" title="${LANG==='he'?'תצוגת כרטיסים':'Grid view'}">▦</button>
+      <button class="view-btn${state.viewMode==='list'?' active':''}" onclick="setViewMode('list')" title="${LANG==='he'?'תצוגת רשימה':'List view'}">☰</button>
+    </div>`;
+
   let cards = '';
   if(!filtered.length){
     cards = `<div class="empty-state"><div class="empty-title">${t('noResults')}</div><div class="empty-sub">${t('noResultsSub')}</div></div>`;
+  } else if(state.viewMode === 'list'){
+    // ── תצוגת רשימה ──
+    cards = `<div class="cards-list">${filtered.map(tool=>{
+      const short = LANG==='he'?tool.shortHe:tool.shortEn;
+      const cat = LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat];
+      const iconContent = tool.favicon
+        ? `<img src="${tool.favicon}" onerror="this.style.display='none';this.nextSibling.style.display='block'" alt=""><span style="display:none">${tool.icon}</span>`
+        : tool.icon;
+      const allToolTags = getToolTags(tool);
+      const tagsPopover = allToolTags.length ? `
+        <div class="tags-popover-wrap">
+          <button class="tags-popover-btn" onclick="event.stopPropagation();toggleTagsPopover(this)">🏷 ${allToolTags.length}</button>
+          <div class="tags-popover" style="display:none">
+            ${allToolTags.map(tag=>`<span class="tag t-use" onclick="event.stopPropagation();setTag('${tag.replace(/'/g,"\\'")}');closeAllPopovers()">${tag}</span>`).join('')}
+          </div>
+        </div>` : '';
+      return `<div class="card-list-item${tool.featured?' featured':''}" onclick="goDetail(${tool.id})">
+        <div class="card-list-icon" style="background:${iconBg(tool.iconBg)}">${iconContent}</div>
+        <div class="card-list-body">
+          <div class="card-list-name">${tool.name}${tool.featured?` <span class="featured-badge">★</span>`:''}</div>
+          <div class="card-list-short">${short}</div>
+          <div class="card-list-tags">
+            <span class="tag t-cat">${cat}</span>
+            ${pricingTag(tool.pricing)}
+            ${tagsPopover}
+          </div>
+        </div>
+        <div class="card-list-actions">
+          ${tool.pricing==='free'?`<span class="meta-badge" style="color:var(--teal);font-size:11px">✓ ${t('free')}</span>`:''}
+          <button class="btn-xs primary" onclick="event.stopPropagation();window.open('${tool.url}','_blank')">${t('open')}</button>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
   } else {
+    // ── תצוגת grid ──
     cards = filtered.map(tool=>{
       const short = LANG==='he'?tool.shortHe:tool.shortEn;
       const cat = LANG==='he'?CATS_HE[tool.cat]:CATS_EN[tool.cat];
       const iconContent = tool.favicon
         ? `<img src="${tool.favicon}" onerror="this.style.display='none';this.nextSibling.style.display='block'" alt=""><span style="display:none">${tool.icon}</span>`
         : tool.icon;
-      const usageTags = getToolTags(tool).slice(0,3).map(tag=>
+      const allToolTags = getToolTags(tool);
+      // תגיות: הצג 1-2 תגיות + כפתור popover לשאר
+      const visibleTags = allToolTags.slice(0,2).map(tag=>
         `<span class="tag t-use" style="cursor:pointer" onclick="event.stopPropagation();setTag('${tag.replace(/'/g,"\\'")}' )">${tag}</span>`
       ).join('');
+      const hiddenCount = allToolTags.length - 2;
+      const tagsPopover = hiddenCount > 0 ? `
+        <div class="tags-popover-wrap">
+          <button class="tags-popover-btn" onclick="event.stopPropagation();toggleTagsPopover(this)">+${hiddenCount} ▾</button>
+          <div class="tags-popover" style="display:none">
+            ${allToolTags.map(tag=>`<span class="tag t-use" onclick="event.stopPropagation();setTag('${tag.replace(/'/g,"\\'")}');closeAllPopovers()">${tag}</span>`).join('')}
+          </div>
+        </div>` : '';
       return `<div class="card${tool.featured?' featured':''}" onclick="goDetail(${tool.id})">
         <div class="card-top">
           <div class="card-icon" style="background:${iconBg(tool.iconBg)}">${iconContent}</div>
@@ -1855,7 +2000,8 @@ function renderList(){
         </div>
         <div class="card-tags">
           <span class="tag t-cat">${cat}</span>
-          ${usageTags}
+          ${visibleTags}
+          ${tagsPopover}
         </div>
         <div class="card-footer">
           <div style="display:flex;gap:8px">
@@ -1909,8 +2055,9 @@ function renderList(){
     </div>
     <div class="results-header">
       <div class="results-count">${filtered.length} ${t('results')}${state.activeTag?' — '+state.activeTag:' — '+catLabel}</div>
+      ${viewToggle}
     </div>
-    <div class="cards-grid">${cards}</div>
+    <div class="${state.viewMode==='list'?'':'cards-grid'}">${cards}</div>
     ${globalExtras}
   `;
 }
@@ -2050,9 +2197,24 @@ function checkMobile(){
   if(menuBtn) menuBtn.style.display = isMobile ? 'flex' : 'none';
 }
 
+function setViewMode(mode){ state.viewMode=mode; renderContent(); }
+
+function toggleTagsPopover(btn){
+  closeAllPopovers();
+  const pop = btn.nextElementSibling;
+  if(pop) pop.style.display = pop.style.display==='none'?'flex':'none';
+  // סגור בלחיצה מחוץ
+  setTimeout(()=>{
+    document.addEventListener('click', closeAllPopovers, {once:true});
+  },0);
+}
+function closeAllPopovers(){
+  document.querySelectorAll('.tags-popover').forEach(p=>p.style.display='none');
+}
+
 // ─── NAVIGATION ───────────────────────────────────────────────
 function goHome(){
-  state.page='list'; state.searchQ=''; state.activeCat=-1;
+  state.page='list'; state.searchQ=''; state.activeCat=-1; state.activeCats=[];
   state.activeSubj=-1; state.activePricing='all'; state.activeTag='';
   renderAll(); window.scrollTo(0,0);
 }
@@ -2119,4 +2281,4 @@ checkMobile();
 window.addEventListener('resize', checkMobile);
 </script>
 </body>
-</html>
+</html>ה
