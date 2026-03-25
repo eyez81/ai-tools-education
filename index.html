@@ -1764,9 +1764,9 @@ function getFiltered(){
   return list;
 }
 
-// חיפוש גלובלי במדריכים ואפליקציות — עם ציון
+// חיפוש גלובלי במדריכים, אפליקציות ומדריכי יוטיוב — עם ציון
 function getGlobalExtras(q){
-  if(!q) return {guides:[], miniapps:[]};
+  if(!q) return {guides:[], miniapps:[], youtube:[]};
   const ql = q.toLowerCase();
 
   const scoreG = g => {
@@ -1785,10 +1785,19 @@ function getGlobalExtras(q){
     if((a.notes||'').toLowerCase().includes(ql)) s += 10;
     return s;
   };
+  const scoreV = v => {
+    let s = 0;
+    if(v.title.toLowerCase().includes(ql)) s += 100;
+    if((v.titleEn||'').toLowerCase().includes(ql)) s += 80;
+    if((v.desc||'').toLowerCase().includes(ql)) s += 30;
+    if((v.notes||'').toLowerCase().includes(ql)) s += 10;
+    return s;
+  };
 
   const mg = guides.map(g=>({g,s:scoreG(g)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.g);
   const ma = miniapps.map(a=>({a,s:scoreA(a)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.a);
-  return {guides:mg, miniapps:ma};
+  const mv = youtubeGuides.map(v=>({v,s:scoreV(v)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.v);
+  return {guides:mg, miniapps:ma, youtube:mv};
 }
 
 function getAllTags(){
@@ -2132,14 +2141,14 @@ function renderList(){
     }).join('');
   }
 
-  // חיפוש גלובלי — מדריכים ואפליקציות
+  // חיפוש גלובלי — כלים, מדריכים, אפליקציות ויוטיוב
   let globalExtras = '';
   if(state.searchQ.trim()){
-    const {guides: matchedGuides, miniapps: matchedApps} = getGlobalExtras(state.searchQ);
-    if(matchedGuides.length||matchedApps.length){
+    const {guides: matchedGuides, miniapps: matchedApps, youtube: matchedVideos} = getGlobalExtras(state.searchQ);
+    if(matchedGuides.length||matchedApps.length||matchedVideos.length){
       globalExtras = `<div style="margin-top:24px">`;
       if(matchedGuides.length){
-        globalExtras += `<div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📖 ${LANG==='he'?'מדריכים':'Guides'}</div>
+        globalExtras += `<div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📖 ${LANG==='he'?'מדריכים פדגוגיים':'Pedagogical Guides'}</div>
         <div class="cards-grid">${matchedGuides.map(g=>`
           <div class="card" onclick="window.open('${g.url}','_blank')">
             <div class="card-top"><div class="card-icon" style="background:var(--blue-bg);font-size:22px">${g.icon||'📖'}</div>
@@ -2154,6 +2163,15 @@ function renderList(){
             <div class="card-top"><div class="card-icon" style="background:${a.color||'var(--amber-bg)'};font-size:22px">${a.icon||'⚡'}</div>
             <div class="card-titles"><div class="card-name">${LANG==='he'?a.name:a.nameEn||a.name}</div><div class="card-short">${a.desc||''}</div></div></div>
             <div class="card-footer"><span></span><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${a.url}','_blank')">${LANG==='he'?'לאפליקציה ↗':'Open ↗'}</button></div>
+          </div>`).join('')}</div>`;
+      }
+      if(matchedVideos.length){
+        globalExtras += `<div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 10px">🎬 ${LANG==='he'?'מדריכי יוטיוב':'YouTube Guides'}</div>
+        <div class="cards-grid">${matchedVideos.map(v=>`
+          <div class="card" onclick="window.open('${v.url}','_blank')">
+            <div class="card-top"><div class="card-icon" style="background:var(--coral-bg);font-size:22px">${v.icon||'🎬'}</div>
+            <div class="card-titles"><div class="card-name">${LANG==='he'?v.title:v.titleEn||v.title}</div><div class="card-short">${v.desc||''}</div></div></div>
+            <div class="card-footer"><span></span><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${v.url}','_blank')">${LANG==='he'?'לסרטון ↗':'Watch ↗'}</button></div>
           </div>`).join('')}</div>`;
       }
       globalExtras += `</div>`;
