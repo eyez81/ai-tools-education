@@ -1238,19 +1238,56 @@ const DEFAULT_TOOLS = [
 
 // ─── מדריכים פדגוגיים ────────────────────────────────────────────
 const DEFAULT_GUIDES = [
-  {id:1,title:'פודקאסט זה אתה בקול — יצירת פודקאסט עם AI',titleEn:'Create a Podcast with AI',desc:'מדריך מלא ליצירת פודקאסט חינוכי עם כלי AI — מהרעיון ועד הפרסום',url:'https://letsai.co.il/start-podcast-journey/',icon:'🎙️'},
+  {
+    id: 1,
+    title: 'פודקאסט זה אתה בקול — יצירת פודקאסט עם AI',
+    titleEn: 'Create a Podcast with AI',
+    desc: 'מדריך מלא ליצירת פודקאסט חינוכי עם כלי AI — מהרעיון ועד הפרסום',
+    url: 'https://letsai.co.il/start-podcast-journey/',
+    icon: '🎙️'
+  },
 ];
 
 // ─── אפליקציות קטנות ─────────────────────────────────────────────
 const DEFAULT_MINIAPPS = [
-  {id:1,name:'QREY — מחולל QR Codes',nameEn:'QREY — Free QR Code Generator',desc:'יצירת קודי QR חינמית ומהירה לכל קישור, טקסט או תוכן — מצוין לשיתוף חומרים עם תלמידים',url:'https://qrey.lovable.app/',icon:'⬛',color:'var(--blue-bg)'},
-  {id:2,name:'נוסחאות מתמטיקה 3 יח"ל',nameEn:'Math Formula Sheet — 3 Units',desc:'דף נוסחאות דיגיטלי אינטראקטיבי למתמטיקה 3 יחידות לימוד',url:'https://beityerach.my.canva.site/formula-3-math-units#%D7%93%D7%A3-%D7%94%D7%91%D7%99%D7%AA',icon:'📐',color:'var(--amber-bg)'},
+  {
+    id: 1,
+    name: 'QREY — מחולל QR Codes',
+    nameEn: 'QREY — Free QR Code Generator',
+    desc: 'יצירת קודי QR חינמית ומהירה לכל קישור, טקסט או תוכן — מצוין לשיתוף חומרים עם תלמידים',
+    url: 'https://qrey.lovable.app/',
+    icon: '⬛',
+    color: 'var(--blue-bg)'
+  },
+  {
+    id: 2,
+    name: 'נוסחאות מתמטיקה 3 יח"ל',
+    nameEn: 'Math Formula Sheet — 3 Units',
+    desc: 'דף נוסחאות דיגיטלי אינטראקטיבי למתמטיקה 3 יחידות לימוד',
+    url: 'https://beityerach.my.canva.site/formula-3-math-units#%D7%93%D7%A3-%D7%94%D7%91%D7%99%D7%AA',
+    icon: '📐',
+    color: 'var(--amber-bg)'
+  },
 ];
 
 // ─── מדריכי יוטיוב ───────────────────────────────────────────────
 const DEFAULT_YOUTUBE_GUIDES = [
-  {id:1,title:'גוגל קלאסרום: משוב בוידאו ואודיו!',titleEn:'AI Tutorial Video',desc:'גוגל מאפשרת לנו מעכשיו לתת משוב לתלמידים לא רק בטקסט יבש, אלא בהקלטת קול, וידאו ואפילו הקלטת מסך ישירות מתוך ממשק הבדיקה. זה הופך את ההערכה להרבה יותר אישית, ברורה וחוסכת זמן יקר.
-',url:'[https://youtu.be/-XKMd5GOJvs?si=hPh6sxTcZ7zpmD6k',icon:'🎬'}](https://youtu.be/-XKMd5GOJvs?si=hPh6sxTcZ7zpmD6k',icon:'🎬'}),
+  {
+    id: 1,
+    title: 'גוגל קלאסרום: משוב בוידאו ואודיו!',
+    titleEn: 'Google Classroom: Video and Audio Feedback',
+    desc: 'גוגל מאפשרת מעכשיו לתת משוב לתלמידים לא רק בטקסט, אלא גם בהקלטת קול, וידאו ואפילו הקלטת מסך ישירות מתוך ממשק הבדיקה. זה הופך את ההערכה ליותר אישית, ברורה וחוסכת זמן.',
+    url: 'https://youtu.be/-XKMd5GOJvs?si=hPh6sxTcZ7zpmD6k',
+    icon: '🎬'
+  },
+  {
+    id: 2,
+    title: 'איך יוצרים כיתה בגוגל קלאסרום דרך בית ספר וירטואלי — קל ופשוט',
+    titleEn: 'How to Create a Google Classroom Class via Virtual School',
+    desc: 'הסרטון מסביר כיצד לפתוח כיתה בגוגל קלאסרום דרך מערכת בית ספר וירטואלי, כולל שלבי יצירה והגדרה בסיסיים.',
+    url: 'https://youtu.be/ZPB54MFTRAc?si=a5SG4rCpRufn2_yW',
+    icon: '🎬'
+  },
 ];
 
 let guides = JSON.parse(JSON.stringify(DEFAULT_GUIDES));
