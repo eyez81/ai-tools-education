@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -57,7 +58,8 @@ body.ltr{font-family:'Inter',Arial,sans-serif;direction:ltr}
 body.rtl{direction:rtl}
 
 /* ── TOPBAR ── */
-.topbar{background:var(--surface);border-bottom:0.5px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.topbar{background:var(--surface);border-bottom:0.5px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:200}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;max-width:1280px;width:100%}
 .topbar-left{display:flex;align-items:center;gap:12px;cursor:pointer}
 .topbar-left:hover .app-name{color:var(--blue)}
 .logo-mark{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;user-select:none}
@@ -357,6 +359,22 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 .notes-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rad-lg);padding:16px 18px;margin-bottom:16px}
 .notes-box-title{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
 .notes-box-text{font-size:var(--fs-sm);color:var(--text);line-height:1.85;white-space:pre-line}
+
+/* ── GLOBAL SEARCH BAR ── */
+.global-search-bar{background:var(--surface);border-radius:var(--rad-lg);border:0.5px solid var(--border);padding:14px 18px;margin-bottom:16px}
+.global-search-row{display:flex;gap:8px;align-items:center}
+.global-search-row .search-input{flex:1;height:42px}
+.tags-dropdown-btn{height:42px;padding:0 16px;border-radius:var(--rad);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tags-dropdown-btn:hover{background:var(--surface);color:var(--text)}
+.global-search-bar .chips-row{max-height:0;overflow:hidden;transition:max-height .3s ease,margin-top .2s}
+.global-search-bar .chips-row.expanded{max-height:400px}
+@media (max-width: 768px) {
+  .global-search-bar{padding:10px 12px;border-radius:var(--rad)}
+  .global-search-row{flex-wrap:wrap}
+  .global-search-row .search-input{height:38px;font-size:13px}
+  .search-btn{height:38px;padding:0 12px;font-size:13px}
+  .tags-dropdown-btn{height:38px;font-size:12px}
+}
 </style>
 </head>
 <body class="rtl">
@@ -365,6 +383,7 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
 
 <!-- TOPBAR -->
 <div class="topbar">
+  <div class="topbar-inner">
   <div class="topbar-left" onclick="goHome()">
     <div class="logo-mark" id="logo-secret" onclick="event.stopPropagation();logoClick()">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
@@ -380,6 +399,7 @@ body.rtl .tip-box{border-inline-start:none;border-inline-end:3px solid var(--tea
     <div class="ctrl-sep"></div>
     <button class="ctrl-btn" id="theme-btn" onclick="cycleTheme()" title="שנה מצב תצוגה">☀️</button>
     <button id="menu-btn" style="display:none;width:36px;height:36px;border-radius:var(--rad);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:18px;align-items:center;justify-content:center;color:var(--text2)" onclick="toggleMobileMenu()">☰</button>
+  </div>
   </div>
 </div>
 
@@ -1825,19 +1845,64 @@ function navigate(page){ state.page=page; closeMobileMenu(); renderAll(); window
 
 function renderContent(){
   const el = document.getElementById('content');
-  if(state.page==='list') el.innerHTML = renderList();
-  else if(state.page==='detail') el.innerHTML = renderDetail(state.selectedId);
-  else if(state.page==='guides') el.innerHTML = renderGuides();
-  else if(state.page==='miniapps') el.innerHTML = renderMiniapps();
-  else if(state.page==='youtube-guides') el.innerHTML = renderYoutubeGuides();
+  const allTags = getAllTags();
+  const expandLabel = LANG==='he' ? 'תגיות ▾' : 'Tags ▾';
+  const collapseLabel = LANG==='he' ? 'סגור ▴' : 'Close ▴';
+
+  // שורת חיפוש גלובלית + כפתור תגיות (מוצגת בכל הדפים)
+  const globalSearch = `
+    <div class="global-search-bar">
+      <div class="global-search-row">
+        <input class="search-input" id="global-search-input" type="text" placeholder="${t('searchPh')}" value="${state.searchQ}" oninput="setGlobalSearch(this.value)">
+        <button class="search-btn" onclick="setGlobalSearch(document.getElementById('global-search-input').value)">${t('search')}</button>
+        <button id="tags-toggle-btn" onclick="toggleTagsExpand()" class="tags-dropdown-btn">${tagsExpanded?collapseLabel:expandLabel}</button>
+      </div>
+      <div class="chips-row${tagsExpanded?' expanded':''}" id="tags-chips-row" style="margin-top:${tagsExpanded?'10px':'0'}">
+        <button class="chip${!state.activeTag?' active':''}" onclick="setTag('');state.page='list';renderAll()">${LANG==='he'?'הכל':'All'}</button>
+        ${allTags.map(({tag,count})=>`<button class="chip${state.activeTag===tag?' active':''}" onclick="setTag('${tag.replace(/'/g,"\\'")}');state.page='list';renderAll()"><span>${tag}</span><span style="opacity:.5;font-size:10px;margin-inline-start:4px">${count}</span></button>`).join('')}
+      </div>
+    </div>`;
+
+  let pageContent = '';
+  if(state.page==='list') pageContent = renderList();
+  else if(state.page==='detail') pageContent = renderDetail(state.selectedId);
+  else if(state.page==='guides') pageContent = renderGuides();
+  else if(state.page==='miniapps') pageContent = renderMiniapps();
+  else if(state.page==='youtube-guides') pageContent = renderYoutubeGuides();
+
+  // בדף detail אין טעם להציג חיפוש
+  if(state.page==='detail'){
+    el.innerHTML = pageContent;
+  } else {
+    el.innerHTML = globalSearch + pageContent;
+  }
   attachListEvents();
+}
+
+function setGlobalSearch(val){
+  state.searchQ = val;
+  if(state.page !== 'list') state.page = 'list';
+  renderContent();
+  setTimeout(()=>{
+    const ni = document.getElementById('global-search-input');
+    if(ni){ ni.focus(); ni.setSelectionRange(val.length, val.length); }
+  }, 10);
 }
 
 function renderGuides(){
   const isHe = LANG==='he';
+  const vm = state.guidesView || 'grid';
+  const viewToggle = `<div class="view-toggle"><button class="view-btn${vm==='grid'?' active':''}" onclick="state.guidesView='grid';renderContent()" title="${isHe?'תצוגת כרטיסים':'Grid view'}">▦</button><button class="view-btn${vm==='list'?' active':''}" onclick="state.guidesView='list';renderContent()" title="${isHe?'תצוגת רשימה':'List view'}">☰</button></div>`;
   let cards = '';
   if(!guides.length){
     cards = `<div class="empty-state"><div style="font-size:48px;margin-bottom:12px">📖</div><div class="empty-title">${isHe?'מדריכים יתווספו בקרוב':'Guides coming soon'}</div></div>`;
+  } else if(vm==='list'){
+    cards = `<div class="cards-list">${guides.map(g=>`
+      <div class="card-list-item" onclick="window.open('${g.url}','_blank')">
+        <div class="card-list-icon" style="background:var(--blue-bg);font-size:20px">${g.icon||'📖'}</div>
+        <div class="card-list-body"><div class="card-list-name">${isHe?g.title:g.titleEn||g.title}</div><div class="card-list-short">${g.desc||''}</div></div>
+        <div class="card-list-actions"><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${g.url}','_blank')">${isHe?'לקריאה ↗':'Read ↗'}</button></div>
+      </div>`).join('')}</div>`;
   } else {
     cards = `<div class="cards-grid">${guides.map(g=>`
       <div class="card" onclick="window.open('${g.url}','_blank')">
@@ -1849,16 +1914,28 @@ function renderGuides(){
       </div>`).join('')}</div>`;
   }
   return `<div style="max-width:860px">
-    <div style="margin-bottom:20px"><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">📖 ${isHe?'מדריכים פדגוגיים':'Pedagogical Guides'}</h1>
-    <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'מדריכים ורעיונות לשילוב בינה מלאכותית בהוראה':'Guides and ideas for integrating AI in teaching'}</p></div>
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+      <div><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">📖 ${isHe?'מדריכים פדגוגיים':'Pedagogical Guides'}</h1>
+      <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'מדריכים ורעיונות לשילוב בינה מלאכותית בהוראה':'Guides and ideas for integrating AI in teaching'}</p></div>
+      ${viewToggle}
+    </div>
     ${cards}</div>`;
 }
 
 function renderMiniapps(){
   const isHe = LANG==='he';
+  const vm = state.miniappsView || 'grid';
+  const viewToggle = `<div class="view-toggle"><button class="view-btn${vm==='grid'?' active':''}" onclick="state.miniappsView='grid';renderContent()" title="${isHe?'תצוגת כרטיסים':'Grid view'}">▦</button><button class="view-btn${vm==='list'?' active':''}" onclick="state.miniappsView='list';renderContent()" title="${isHe?'תצוגת רשימה':'List view'}">☰</button></div>`;
   let cards = '';
   if(!miniapps.length){
     cards = `<div class="empty-state"><div style="font-size:48px;margin-bottom:12px">⚡</div><div class="empty-title">${isHe?'אפליקציות יתווספו בקרוב':'Apps coming soon'}</div></div>`;
+  } else if(vm==='list'){
+    cards = `<div class="cards-list">${miniapps.map(a=>`
+      <div class="card-list-item" onclick="window.open('${a.url}','_blank')">
+        <div class="card-list-icon" style="background:${a.color||'var(--amber-bg)'};font-size:20px">${a.icon||'⚡'}</div>
+        <div class="card-list-body"><div class="card-list-name">${isHe?a.name:a.nameEn||a.name}</div><div class="card-list-short">${a.desc||''}</div></div>
+        <div class="card-list-actions"><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${a.url}','_blank')">${isHe?'לאפליקציה ↗':'Open ↗'}</button></div>
+      </div>`).join('')}</div>`;
   } else {
     cards = `<div class="cards-grid">${miniapps.map(a=>`
       <div class="card" onclick="window.open('${a.url}','_blank')">
@@ -1870,16 +1947,28 @@ function renderMiniapps(){
       </div>`).join('')}</div>`;
   }
   return `<div style="max-width:860px">
-    <div style="margin-bottom:20px"><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">⚡ ${isHe?'אפליקציות קטנות':'Mini Apps'}</h1>
-    <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'אפליקציות ייעודיות שבניתי למטרות חינוכיות ספציפיות':'Purpose-built mini apps for specific educational needs'}</p></div>
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+      <div><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">⚡ ${isHe?'אפליקציות קטנות':'Mini Apps'}</h1>
+      <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'אפליקציות ייעודיות שבניתי למטרות חינוכיות ספציפיות':'Purpose-built mini apps for specific educational needs'}</p></div>
+      ${viewToggle}
+    </div>
     ${cards}</div>`;
 }
 
 function renderYoutubeGuides(){
   const isHe = LANG==='he';
+  const vm = state.youtubeView || 'grid';
+  const viewToggle = `<div class="view-toggle"><button class="view-btn${vm==='grid'?' active':''}" onclick="state.youtubeView='grid';renderContent()" title="${isHe?'תצוגת כרטיסים':'Grid view'}">▦</button><button class="view-btn${vm==='list'?' active':''}" onclick="state.youtubeView='list';renderContent()" title="${isHe?'תצוגת רשימה':'List view'}">☰</button></div>`;
   let cards = '';
   if(!youtubeGuides.length){
     cards = `<div class="empty-state"><div style="font-size:48px;margin-bottom:12px">🎬</div><div class="empty-title">${isHe?'סרטונים יתווספו בקרוב':'Videos coming soon'}</div></div>`;
+  } else if(vm==='list'){
+    cards = `<div class="cards-list">${youtubeGuides.map(v=>`
+      <div class="card-list-item" onclick="window.open('${v.url}','_blank')">
+        <div class="card-list-icon" style="background:var(--coral-bg);font-size:20px">${v.icon||'🎬'}</div>
+        <div class="card-list-body"><div class="card-list-name">${isHe?v.title:v.titleEn||v.title}</div><div class="card-list-short">${v.desc||''}</div></div>
+        <div class="card-list-actions"><button class="btn-xs primary" onclick="event.stopPropagation();window.open('${v.url}','_blank')">${isHe?'לסרטון':'Watch'}</button></div>
+      </div>`).join('')}</div>`;
   } else {
     cards = `<div class="cards-grid">${youtubeGuides.map(v=>`
       <div class="card" onclick="window.open('${v.url}','_blank')">
@@ -1891,14 +1980,16 @@ function renderYoutubeGuides(){
       </div>`).join('')}</div>`;
   }
   return `<div style="max-width:860px">
-    <div style="margin-bottom:20px"><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">🎬 ${isHe?'מדריכי יוטיוב':'YouTube Guides'}</h1>
-    <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'סרטוני הדרכה שימושיים מיוטיוב על כלים, הוראה ובינה מלאכותית':'Useful YouTube tutorial videos about tools, teaching, and AI'}</p></div>
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+      <div><h1 style="font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px">🎬 ${isHe?'מדריכי יוטיוב':'YouTube Guides'}</h1>
+      <p style="font-size:var(--fs-sm);color:var(--text2)">${isHe?'סרטוני הדרכה שימושיים מיוטיוב על כלים, הוראה ובינה מלאכותית':'Useful YouTube tutorial videos about tools, teaching, and AI'}</p></div>
+      ${viewToggle}
+    </div>
     ${cards}</div>`;
 }
 
 function attachListEvents(){
-  const si = document.getElementById('search-input');
-  if(si){ si.addEventListener('input', e=>{ state.searchQ=e.target.value; renderContent(); const ni=document.getElementById('search-input'); if(ni){ni.focus();ni.setSelectionRange(state.searchQ.length,state.searchQ.length);} }); }
+  // אירועי חיפוש מטופלים ע"י oninput ב-global-search-input
 }
 
 function pricingTag(p){ const cls=p==='free'?'t-free':p==='partial'?'t-partial':'t-paid'; const lbl=p==='free'?t('free'):p==='partial'?t('partial'):t('paid'); return `<span class="tag ${cls}">${lbl}</span>`; }
@@ -1908,23 +1999,10 @@ function diffLabel(d){ return d==='easy'?t('easy'):d==='medium'?t('medium'):t('a
 
 function renderList(){
   const filtered = getFiltered();
-  const allTags = getAllTags();
   const isMulti = state.activeCats.length > 0;
   const catLabel = isMulti
     ? state.activeCats.map(i=>t('cats')[i]).join(' + ')
     : (state.activeCat>=0 ? t('cats')[state.activeCat] : t('allTools'));
-
-  // תגיות שימוש — מכווץ עם כפתור הרחבה
-  const expandLabel = LANG==='he' ? 'כל התגיות ▾' : 'All tags ▾';
-  const collapseLabel = LANG==='he' ? 'סגור ▴' : 'Close ▴';
-  const tagsRow = `
-    <div style="display:flex;align-items:flex-start;gap:8px">
-      <div class="chips-row" id="tags-chips-row" style="flex:1">
-        <button class="chip${!state.activeTag?' active':''}" onclick="setTag('')">${LANG==='he'?'הכל':'All'}</button>
-        ${allTags.map(({tag,count})=>`<button class="chip${state.activeTag===tag?' active':''}" onclick="setTag('${tag.replace(/'/g,"\\'")}')"><span>${tag}</span><span style="opacity:.5;font-size:10px;margin-inline-start:4px">${count}</span></button>`).join('')}
-      </div>
-      <button id="tags-toggle-btn" onclick="toggleTagsExpand()" style="flex-shrink:0;padding:4px 10px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap;margin-top:2px">${expandLabel}</button>
-    </div>`;
 
   // כפתורי תצוגה grid/list
   const viewToggle = `
@@ -2046,13 +2124,6 @@ function renderList(){
   }
 
   return `
-    <div class="search-wrap">
-      <div class="search-row">
-        <input class="search-input" id="search-input" type="text" placeholder="${t('searchPh')}" value="${state.searchQ}">
-        <button class="search-btn">${t('search')}</button>
-      </div>
-      ${tagsRow}
-    </div>
     <div class="results-header">
       <div class="results-count">${filtered.length} ${t('results')}${state.activeTag?' — '+state.activeTag:' — '+catLabel}</div>
       ${viewToggle}
@@ -2265,12 +2336,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=
 let tagsExpanded = false;
 function toggleTagsExpand(){
   tagsExpanded = !tagsExpanded;
-  const row = document.getElementById('tags-chips-row');
-  const btn = document.getElementById('tags-toggle-btn');
-  if(row) row.classList.toggle('expanded', tagsExpanded);
-  if(btn) btn.textContent = tagsExpanded
-    ? (LANG==='he'?'סגור ▴':'Close ▴')
-    : (LANG==='he'?'כל התגיות ▾':'All tags ▾');
+  renderContent();
 }
 
 // ─── INIT ─────────────────────────────────────────────────────
